@@ -1,6 +1,8 @@
 pragma solidity ^0.4.24;
 // v1.0
 
+import "hardhat/console.sol";
+
 import "../../lib/ownership/Upgradable.sol";
 import "../../lib/lifecycle/Destructible.sol";
 import "../bondage/BondageInterface.sol";
