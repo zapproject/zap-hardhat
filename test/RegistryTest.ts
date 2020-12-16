@@ -1,16 +1,23 @@
-import { expect } from "chai";
 import { ethers } from "hardhat";
+import { solidity } from "ethereum-waffle";
+import chai from "chai";
+import mocha from "mocha";
 
 import { ZapCoordinator } from "../typechain/ZapCoordinator";
 import { Database } from "../typechain/Database";
-import { Registry } from "../typechain/Registry";
+import { Registry, RegistryInterface } from "../typechain/Registry";
 import { CurrentCost } from "../typechain/CurrentCost";
+import { Upgradable } from "../typechain/Upgradable";
+import { sign } from "crypto";
+
+chai.use(solidity);
+const { expect } = chai;
 
 describe("ZapCoordinator", () => {
     let coordinator: ZapCoordinator;
-    let registry : Registry;
-    
-
+    let db : Database;
+    let registry: Registry;
+    let upgradable: Upgradable;
   
     beforeEach(async () => {
       const signers = await ethers.getSigners();
@@ -26,30 +33,42 @@ describe("ZapCoordinator", () => {
         "Database",
         signers[0]
       );
-      registry = (await dbFactory.deploy()) as Registry;
+
+      const registryFactory = await ethers.getContractFactory(
+          "Registry",
+           signers[0]
+      );
+
+      db = (await dbFactory.deploy()) as Database;
+      await coordinator.deployed();
+
+      registry = (await registryFactory.deploy(coordinator.address)) as Registry;
       await coordinator.deployed();
       
+      await db.transferOwnership(coordinator.address)
+      await coordinator.addImmutableContract('DATABASE', db.address)
+
       await registry.transferOwnership(coordinator.address)
+      await coordinator.addImmutableContract('REGISTRY', registry.address)
+    }); 
+
+    it("Check that we can initiate a provider", async function () {
+        //example params
+        //let publicKey: number;
+        //let title: string;
+
+        let publicKey = ethers.BigNumber.from("0xa4e5cd0b3d4a050734d2fe310b30ab0a80e72eae");
+        //console.log(publicKey);
+        //let title = ethers.utils.parseBytes32String("0x4d617843727970746f0000000000000000000000000000000000000000000000");
+        let title = [0x4d617843727970746f0000000000000000000000000000000000000000000000];
 
 
- 
-
-    describe("Check that we can initiate a provider", async function() {
-        it("should pass", async function() {
-
-        })
-
-        // example params
-        // let publicKey: "0xa4e5cd0b3d4a050734d2fe310b30ab0a80e72eae";
-        // let title: "0x506f6c6f6e6965784150492e6d64000000000000000000000000000000000000";
-        await registry.initiateProvider("0xa4e5cd0b3d4a050734d2fe310b30ab0a80e72eae", "0x506f6c6f6e6965784150492e6d64000000000000000000000000000000000000");
-        expect('initiateProvider').to.be.calledOnContract(registry);
+        await registry.initiateProvider(publicKey, title);
+    //    expect('initiateProvider').to.be.calledOnContract(registry);
+    
     });
 
-//     });
-// });
-
-    // describe("Check that we can't change provider info if it was initated", async function() {
+     // describe("Check that we can't change provider info if it was initated", async function() {
     //     it("should fail given that the provider has been initiated", async function() {
 
     //     })
@@ -211,4 +230,3 @@ describe("ZapCoordinator", () => {
 
           
     });
-});
