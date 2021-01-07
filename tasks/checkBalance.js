@@ -26,6 +26,7 @@ Balanced
         // Log account details
         console.log({
             address: taskArgs.account,
+            mnemonic: signers[i].mnemonic,
             balance: parseInt(signerBalance._hex) + ' ZAP'
         });
 
