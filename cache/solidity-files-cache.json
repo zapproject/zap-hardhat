@@ -1,9 +1,8 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/ERC20.sol": {
-      "lastModificationDate": 1610065553238,
-      "contentHash": "6eeac04aebf2a7d26a31203ddaf12c5d",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\ERC20.sol": {
+      "lastModificationDate": 1610068760088,
       "sourceName": "contracts/lib/ERC20.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -44,9 +43,8 @@
         "ERC20Basic"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/bondage/Bondage.sol": {
-      "lastModificationDate": 1610065553245,
-      "contentHash": "264e88cc710838a5df8587afd1c73acd",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\bondage\\Bondage.sol": {
+      "lastModificationDate": 1610068760165,
       "sourceName": "contracts/platform/bondage/Bondage.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -94,9 +92,8 @@
         "Bondage"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/lifecycle/Destructible.sol": {
-      "lastModificationDate": 1610065553239,
-      "contentHash": "42ad9849a5a548298990c664c0eeb53f",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\lifecycle\\Destructible.sol": {
+      "lastModificationDate": 1610068760098,
       "sourceName": "contracts/lib/lifecycle/Destructible.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -138,9 +135,8 @@
         "Destructible"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/ownership/Upgradable.sol": {
-      "lastModificationDate": 1610065553240,
-      "contentHash": "bbfa7e561f8200297f07c5d1b2d14c52",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\ownership\\Upgradable.sol": {
+      "lastModificationDate": 1610068760117,
       "sourceName": "contracts/lib/ownership/Upgradable.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -182,9 +178,8 @@
         "Upgradable"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/database/DatabaseInterface.sol": {
-      "lastModificationDate": 1610065553247,
-      "contentHash": "e0b4e8f443a142aa226cd15236787a10",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\database\\DatabaseInterface.sol": {
+      "lastModificationDate": 1610068760181,
       "sourceName": "contracts/platform/database/DatabaseInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -226,9 +221,8 @@
         "DatabaseInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/bondage/currentCost/CurrentCostInterface.sol": {
-      "lastModificationDate": 1610065553246,
-      "contentHash": "9f14e0e234d2d583a5fedeb5af435924",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\bondage\\currentCost\\CurrentCostInterface.sol": {
+      "lastModificationDate": 1610068760172,
       "sourceName": "contracts/platform/bondage/currentCost/CurrentCostInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -268,9 +262,8 @@
         "CurrentCostInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/bondage/BondageInterface.sol": {
-      "lastModificationDate": 1610065553245,
-      "contentHash": "48fd3e227790075981b53dec7d9fcf7c",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\bondage\\BondageInterface.sol": {
+      "lastModificationDate": 1610068760167,
       "sourceName": "contracts/platform/bondage/BondageInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -310,9 +303,8 @@
         "BondageInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1610055950434,
-      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1609116094369,
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -346,15 +338,14 @@
       },
       "imports": [],
       "versionPragmas": [
-        ">=0.4.22 <0.9.0"
+        ">=0.4.22 <0.8.0"
       ],
       "artifacts": [
         "console"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/ownership/Ownable.sol": {
-      "lastModificationDate": 1610065553239,
-      "contentHash": "d508f8ef46142c86d75abbdd46c2339d",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\ownership\\Ownable.sol": {
+      "lastModificationDate": 1610068760101,
       "sourceName": "contracts/lib/ownership/Ownable.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -394,9 +385,8 @@
         "Ownable"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/ownership/ZapCoordinatorInterface.sol": {
-      "lastModificationDate": 1610065553241,
-      "contentHash": "0910a47ae1e556752364ab1a1346d937",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\ownership\\ZapCoordinatorInterface.sol": {
+      "lastModificationDate": 1610068760137,
       "sourceName": "contracts/lib/ownership/ZapCoordinatorInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -438,9 +428,8 @@
         "ZapCoordinatorInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/dispatch/Dispatch.sol": {
-      "lastModificationDate": 1610065553247,
-      "contentHash": "13e8ff7e62e7d6404fc4bdede09940db",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\dispatch\\Dispatch.sol": {
+      "lastModificationDate": 1610068760186,
       "sourceName": "contracts/platform/dispatch/Dispatch.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -488,9 +477,8 @@
         "Dispatch"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/platform/Client.sol": {
-      "lastModificationDate": 1610065553241,
-      "contentHash": "777c9b66e7f183c4347f3e90799599eb",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\platform\\Client.sol": {
+      "lastModificationDate": 1610068760140,
       "sourceName": "contracts/lib/platform/Client.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -535,9 +523,8 @@
         "ClientIntArray"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/platform/OnChainProvider.sol": {
-      "lastModificationDate": 1610065553241,
-      "contentHash": "ccda62f47007cbb8acbee9a9a20df509",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\platform\\OnChainProvider.sol": {
+      "lastModificationDate": 1610068760142,
       "sourceName": "contracts/lib/platform/OnChainProvider.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -577,9 +564,8 @@
         "OnChainProvider"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/dispatch/DispatchInterface.sol": {
-      "lastModificationDate": 1610065553248,
-      "contentHash": "39be993680e08e0d4278666e21b0c642",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\dispatch\\DispatchInterface.sol": {
+      "lastModificationDate": 1610068760197,
       "sourceName": "contracts/platform/dispatch/DispatchInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -619,9 +605,8 @@
         "DispatchInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/registry/Registry.sol": {
-      "lastModificationDate": 1610065553248,
-      "contentHash": "8e5a5ddaf7aee8da6ed84a20324872fe",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\registry\\Registry.sol": {
+      "lastModificationDate": 1610068760217,
       "sourceName": "contracts/platform/registry/Registry.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -666,9 +651,8 @@
         "Registry"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/registry/RegistryInterface.sol": {
-      "lastModificationDate": 1610065553249,
-      "contentHash": "c14c2fbf22410fe287c547b36394d88e",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\registry\\RegistryInterface.sol": {
+      "lastModificationDate": 1610068760230,
       "sourceName": "contracts/platform/registry/RegistryInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -708,9 +692,8 @@
         "RegistryInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/bondage/currentCost/CurrentCost.sol": {
-      "lastModificationDate": 1610065553245,
-      "contentHash": "1367106691615d5d3819e656863858fc",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\bondage\\currentCost\\CurrentCost.sol": {
+      "lastModificationDate": 1610068760169,
       "sourceName": "contracts/platform/bondage/currentCost/CurrentCost.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -756,9 +739,8 @@
         "CurrentCost"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/platform/PiecewiseLogic.sol": {
-      "lastModificationDate": 1610065553242,
-      "contentHash": "fb6497e81d41fbaba6a1e4049c6336aa",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\platform\\PiecewiseLogic.sol": {
+      "lastModificationDate": 1610068760143,
       "sourceName": "contracts/lib/platform/PiecewiseLogic.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -798,9 +780,8 @@
         "PiecewiseLogic"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/arbiter/Arbiter.sol": {
-      "lastModificationDate": 1610065553244,
-      "contentHash": "cb2107e79f9e291b58560a7d2278732e",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\arbiter\\Arbiter.sol": {
+      "lastModificationDate": 1610068760161,
       "sourceName": "contracts/platform/arbiter/Arbiter.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -846,9 +827,8 @@
         "Arbiter"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/arbiter/ArbiterInterface.sol": {
-      "lastModificationDate": 1610065553244,
-      "contentHash": "8743c4cf32e1027c44617a4cbfab259a",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\arbiter\\ArbiterInterface.sol": {
+      "lastModificationDate": 1610068760163,
       "sourceName": "contracts/platform/arbiter/ArbiterInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -888,9 +868,8 @@
         "ArbiterInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/platform/database/Database.sol": {
-      "lastModificationDate": 1610065553246,
-      "contentHash": "e6b84107fc16f29795d3ed69879d3b7e",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\platform\\database\\Database.sol": {
+      "lastModificationDate": 1610068760176,
       "sourceName": "contracts/platform/database/Database.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -933,9 +912,8 @@
         "Database"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/token/FactoryTokenInterface.sol": {
-      "lastModificationDate": 1610065553242,
-      "contentHash": "cbe0d46d1028542e7538020f252217b1",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\token\\FactoryTokenInterface.sol": {
+      "lastModificationDate": 1610068760146,
       "sourceName": "contracts/lib/token/FactoryTokenInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -977,9 +955,8 @@
         "FactoryTokenInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/token/TokenFactoryInterface.sol": {
-      "lastModificationDate": 1610065553243,
-      "contentHash": "21e56f152b2dece9d28b8a1ffc9992a2",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\token\\TokenFactoryInterface.sol": {
+      "lastModificationDate": 1610068760150,
       "sourceName": "contracts/lib/token/TokenFactoryInterface.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -1021,9 +998,8 @@
         "TokenFactoryInterface"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/token/TokenFactory.sol": {
-      "lastModificationDate": 1610065553243,
-      "contentHash": "1bae489d97c4dc2ee244c7e15d6d780b",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\token\\TokenFactory.sol": {
+      "lastModificationDate": 1610068760149,
       "sourceName": "contracts/lib/token/TokenFactory.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -1066,9 +1042,8 @@
         "TokenFactory"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/token/Token.sol": {
-      "lastModificationDate": 1610065553243,
-      "contentHash": "eee173824f23ff2e5adad6b8b1a621d4",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\token\\Token.sol": {
+      "lastModificationDate": 1610068760147,
       "sourceName": "contracts/lib/token/Token.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -1111,9 +1086,8 @@
         "SafeMath"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/lib/ownership/ZapCoordinator.sol": {
-      "lastModificationDate": 1610065553240,
-      "contentHash": "ed72d053bf5fbef1166b8e02e370e327",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\lib\\ownership\\ZapCoordinator.sol": {
+      "lastModificationDate": 1610068760130,
       "sourceName": "contracts/lib/ownership/ZapCoordinator.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -1157,9 +1131,8 @@
         "ZapCoordinator"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/token/Faucet.sol": {
-      "lastModificationDate": 1610065553249,
-      "contentHash": "4b10e22a1f141e2de23841f0edf74822",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\token\\Faucet.sol": {
+      "lastModificationDate": 1610068760231,
       "sourceName": "contracts/token/Faucet.sol",
       "solcConfig": {
         "version": "0.5.1",
@@ -1200,9 +1173,8 @@
         "Token"
       ]
     },
-    "/Users/ericmanganaro/zap/zap-hardhat/contracts/token/ZapToken.sol": {
-      "lastModificationDate": 1610065553250,
-      "contentHash": "fefeab7478dddd95e76a9cb39a75a510",
+    "C:\\workspace\\Blockchain_Workspace\\zap-hardhat\\contracts\\token\\ZapToken.sol": {
+      "lastModificationDate": 1610068760233,
       "sourceName": "contracts/token/ZapToken.sol",
       "solcConfig": {
         "version": "0.5.1",
