@@ -19,7 +19,7 @@
 
 ### Run Contract Tests and Generate Gas Usage Report
 
-In one terminal run `npx hardhat node`
+In one terminal run `npm`
 
 Then in another run `npm run test -- --network localhost`
 
@@ -41,3 +41,9 @@ Notes:
 Create/modify network config in `hardhat.config.ts` and add API key and private key, then run:
 
 `npx hardhat run --network rinkeby scripts/deploy.ts`
+### -or- Just use Docker
+Right click on the dockerfile and click "build image", tag the image (ex) - "zaphardhatdevelop:latest"
+Run  `docker run -td zaphardhatdevelop`, the command `npx hardhat node` will run automatically
+To Deploy to localhost,
+-Open Docker Desktop, click the cli button marked with ">-"
+Run `npx hardhat run --network localhost scripts/deploy.ts`

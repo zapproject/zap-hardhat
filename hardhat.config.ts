@@ -3,17 +3,24 @@ dotEnvConfig();
 
 import { HardhatUserConfig } from "hardhat/types";
 
+import './reset/hardhat';
+import './reset/localhost';
+
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-etherscan";
 import "hardhat-typechain";
+import "hardhat-deploy";
+import './tasks/faucet';
+import './tasks/checkbalance';
+import './tasks/checkbalances';
+import './tasks/buyzap';
+import './tasks/initProvider';
+import './tasks/initProviderCurve';
+import './tasks/setEndpointParams';
 
-const { task, taskArgs } = require("hardhat/config");
 
 // TODO: reenable solidity-coverage when it works
 // import "solidity-coverage";
-
-task("faucet", "Sends 100 ZAP to the first 20 accounts")
-  .setAction(async () => {});
 
 const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
 const RINKEBY_PRIVATE_KEY =
@@ -22,14 +29,18 @@ const RINKEBY_PRIVATE_KEY =
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
+
+  defaultNetwork: "localhost",
   solidity: {
-    compilers: [{ version: "0.4.24", settings: {} }],
+    compilers: [{ version: "0.4.24", settings: {} },{ version: "0.5.1", settings: {} }],
   },
   networks: {
-    hardhat: {},
     localhost: {
-      url: "http://127.0.0.1:8545"
+      url: "http://127.0.0.1:8545/",
+
+    },
+    hardhat: {
+
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`,
@@ -46,4 +57,14 @@ const config: HardhatUserConfig = {
   },
 };
 
+
+
+
 export default config;
+
+
+
+
+
+
+
