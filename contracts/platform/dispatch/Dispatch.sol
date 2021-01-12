@@ -8,7 +8,7 @@ import "../../lib/platform/OnChainProvider.sol";
 import "../bondage/BondageInterface.sol";
 import "./DispatchInterface.sol";
 import "../database/DatabaseInterface.sol";
-
+import "hardhat/console.sol";
 contract Dispatch is Destructible, DispatchInterface, Upgradable {
 
     enum Status { Pending, Fulfilled, Canceled }
@@ -121,14 +121,17 @@ contract Dispatch is Destructible, DispatchInterface, Upgradable {
         uint256 dots = bondage.getBoundDots(msg.sender, provider, endpoint);
         bool onchainProvider = isContract(provider);
         bool onchainSubscriber = isContract(msg.sender);
+        console.log(msg.sender);
+        console.log(onchainProvider,"provider");
         if (dots >= 1) {
             //enough dots
             bondage.escrowDots(msg.sender, provider, endpoint, 1);
 
             id = uint256(keccak256(abi.encodePacked(block.number, now, userQuery, msg.sender, provider)));
-
+            console.log(id,"query id");
             createQuery(id, provider, msg.sender, endpoint, userQuery, onchainSubscriber);
             if (onchainProvider) {
+                
                 OnChainProvider(provider).receive(id, userQuery, endpoint, endpointParams, onchainSubscriber);
             } else{
                 emit Incoming(id, provider, msg.sender, userQuery, endpoint, endpointParams, onchainSubscriber);
@@ -402,9 +405,14 @@ contract Dispatch is Destructible, DispatchInterface, Upgradable {
         }
     }
 
-    function isContract(address addr) private view returns (bool) {
-        uint size;
-        assembly { size := extcodesize(addr) }
+     function isContract(address account) public view returns (bool) {
+        // This method relies on extcodesize, which returns 0 for contracts in
+        // construction, since the code is only stored at the end of the
+        // constructor execution.
+
+        uint256 size;
+        // solhint-disable-next-line no-inline-assembly
+        assembly { size := extcodesize(account) }
         return size > 0;
     }
 }

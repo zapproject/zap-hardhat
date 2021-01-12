@@ -9,6 +9,7 @@ import { Registry } from "../typechain/Registry";
 import {Bondage} from  "../typechain/Bondage"
 import { ZapToken } from '../typechain/ZapToken';
 import {CurrentCost} from '../typechain/CurrentCost';
+
 chai.use(solidity);
 const { expect} = chai;
 
@@ -406,7 +407,7 @@ it("BONDAGE_18 - getDotsIssued() - Check that issued dots will decrease with eve
 it("BONDAGE_19 - bond() - Check bond function", async function () {
    await prepareProvider();
    await prepareTokens();
-    expect(bondage.connect(subscriber).bond(oracle.address, specifier, approveTokens)).to.reverted
+   expect(bondage.connect(subscriber).bond(oracle.address, specifier, approveTokens)).to.reverted
    //await expect(this.test.bondage.bond(oracle, specifier, approveTokens, {from: subscriber})).to.be.eventually.be.rejectedWith(EVMRevert);
 });
 

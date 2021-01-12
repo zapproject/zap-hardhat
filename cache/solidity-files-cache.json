@@ -1,0 +1,1276 @@
+{
+  "_format": "hh-sol-cache-1",
+  "files": {
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/ERC20.sol": {
+      "lastModificationDate": 1609606760630,
+      "sourceName": "contracts/lib/ERC20.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "ERC20",
+        "ERC20Basic"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/lifecycle/Destructible.sol": {
+      "lastModificationDate": 1609606760640,
+      "sourceName": "contracts/lib/lifecycle/Destructible.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../ownership/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Destructible"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/ownership/Upgradable.sol": {
+      "lastModificationDate": 1609606760660,
+      "sourceName": "contracts/lib/ownership/Upgradable.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./ZapCoordinatorInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Upgradable"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/database/DatabaseInterface.sol": {
+      "lastModificationDate": 1609606760790,
+      "sourceName": "contracts/platform/database/DatabaseInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../lib/ownership/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "DatabaseInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/bondage/currentCost/CurrentCostInterface.sol": {
+      "lastModificationDate": 1609606760770,
+      "sourceName": "contracts/platform/bondage/currentCost/CurrentCostInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "CurrentCostInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/bondage/BondageInterface.sol": {
+      "lastModificationDate": 1609606760760,
+      "sourceName": "contracts/platform/bondage/BondageInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "BondageInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1610055188570,
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.8.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/ownership/Ownable.sol": {
+      "lastModificationDate": 1609606760650,
+      "sourceName": "contracts/lib/ownership/Ownable.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/ownership/ZapCoordinatorInterface.sol": {
+      "lastModificationDate": 1609606760670,
+      "sourceName": "contracts/lib/ownership/ZapCoordinatorInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "ZapCoordinatorInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/platform/Client.sol": {
+      "lastModificationDate": 1609606760680,
+      "sourceName": "contracts/lib/platform/Client.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Client1",
+        "Client2",
+        "Client3",
+        "Client4",
+        "ClientBytes32Array",
+        "ClientIntArray"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/platform/OnChainProvider.sol": {
+      "lastModificationDate": 1609606760690,
+      "sourceName": "contracts/lib/platform/OnChainProvider.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "OnChainProvider"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/dispatch/DispatchInterface.sol": {
+      "lastModificationDate": 1609606760810,
+      "sourceName": "contracts/platform/dispatch/DispatchInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "DispatchInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/registry/Registry.sol": {
+      "lastModificationDate": 1609606760820,
+      "sourceName": "contracts/platform/registry/Registry.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../lib/lifecycle/Destructible.sol",
+        "../../lib/ownership/Upgradable.sol",
+        "../database/DatabaseInterface.sol",
+        "./RegistryInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Registry"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/registry/RegistryInterface.sol": {
+      "lastModificationDate": 1609606760820,
+      "sourceName": "contracts/platform/registry/RegistryInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "RegistryInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/bondage/currentCost/CurrentCost.sol": {
+      "lastModificationDate": 1609606760770,
+      "sourceName": "contracts/platform/bondage/currentCost/CurrentCost.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../../lib/lifecycle/Destructible.sol",
+        "../../../lib/ownership/Upgradable.sol",
+        "../../../lib/platform/PiecewiseLogic.sol",
+        "../../registry/RegistryInterface.sol",
+        "./CurrentCostInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "CurrentCost"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/platform/PiecewiseLogic.sol": {
+      "lastModificationDate": 1609606760690,
+      "sourceName": "contracts/lib/platform/PiecewiseLogic.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "PiecewiseLogic"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/arbiter/Arbiter.sol": {
+      "lastModificationDate": 1609606760740,
+      "sourceName": "contracts/platform/arbiter/Arbiter.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../lib/ownership/Upgradable.sol",
+        "../../lib/lifecycle/Destructible.sol",
+        "../bondage/BondageInterface.sol",
+        "./ArbiterInterface.sol",
+        "../database/DatabaseInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Arbiter"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/arbiter/ArbiterInterface.sol": {
+      "lastModificationDate": 1609606760740,
+      "sourceName": "contracts/platform/arbiter/ArbiterInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "ArbiterInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/database/Database.sol": {
+      "lastModificationDate": 1609606760780,
+      "sourceName": "contracts/platform/database/Database.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./DatabaseInterface.sol",
+        "../../lib/ownership/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Database"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/token/FactoryTokenInterface.sol": {
+      "lastModificationDate": 1609606760700,
+      "sourceName": "contracts/lib/token/FactoryTokenInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../ownership/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "FactoryTokenInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/token/TokenFactoryInterface.sol": {
+      "lastModificationDate": 1609606760720,
+      "sourceName": "contracts/lib/token/TokenFactoryInterface.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./FactoryTokenInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "TokenFactoryInterface"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/token/TokenFactory.sol": {
+      "lastModificationDate": 1609606760720,
+      "sourceName": "contracts/lib/token/TokenFactory.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./Token.sol",
+        "./TokenFactoryInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "TokenFactory"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/token/Token.sol": {
+      "lastModificationDate": 1609606760710,
+      "sourceName": "contracts/lib/token/Token.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./FactoryTokenInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "FactoryToken",
+        "SafeMath"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/ownership/ZapCoordinator.sol": {
+      "lastModificationDate": 1609606760670,
+      "sourceName": "contracts/lib/ownership/ZapCoordinator.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./Upgradable.sol",
+        "./ZapCoordinatorInterface.sol",
+        "../../platform/database/DatabaseInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "ZapCoordinator"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/token/Faucet.sol": {
+      "lastModificationDate": 1609606760830,
+      "sourceName": "contracts/token/Faucet.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Faucet",
+        "Token"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/token/ZapToken.sol": {
+      "lastModificationDate": 1609606760840,
+      "sourceName": "contracts/token/ZapToken.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "BasicToken",
+        "ERC20",
+        "ERC20Basic",
+        "MintableToken",
+        "Ownable",
+        "SafeMath",
+        "StandardToken",
+        "ZapToken"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/bondage/Bondage.sol": {
+      "lastModificationDate": 1610404783600,
+      "sourceName": "contracts/platform/bondage/Bondage.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../lib/lifecycle/Destructible.sol",
+        "../../lib/ownership/Upgradable.sol",
+        "../../lib/ERC20.sol",
+        "../database/DatabaseInterface.sol",
+        "./currentCost/CurrentCostInterface.sol",
+        "./BondageInterface.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Bondage"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/platform/TestContracts.sol": {
+      "lastModificationDate": 1610475088270,
+      "sourceName": "contracts/lib/platform/TestContracts.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./Client.sol",
+        "../../platform/dispatch/DispatchInterface.sol",
+        "../../platform/bondage/BondageInterface.sol",
+        "../../platform/registry/RegistryInterface.sol",
+        "./OnChainProvider.sol",
+        "../ERC20.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "TestClient",
+        "TestProvider"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/dispatch/Dispatch.sol": {
+      "lastModificationDate": 1610476442420,
+      "sourceName": "contracts/platform/dispatch/Dispatch.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../lib/ownership/Upgradable.sol",
+        "../../lib/lifecycle/Destructible.sol",
+        "../../lib/platform/Client.sol",
+        "../../lib/platform/OnChainProvider.sol",
+        "../bondage/BondageInterface.sol",
+        "./DispatchInterface.sol",
+        "../database/DatabaseInterface.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Dispatch"
+      ]
+    }
+  }
+}
