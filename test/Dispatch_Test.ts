@@ -12,7 +12,7 @@ import {CurrentCost} from '../typechain/CurrentCost';
 import {Dispatch} from '../typechain/Dispatch';
 import {TestProvider} from '../typechain/TestProvider';
 import {TestClient}  from '../typechain/TestClient';
-
+import {OffChainClient}  from '../typechain/OffChainClient';
 chai.use(solidity);
 const { expect} = chai;
 
@@ -87,14 +87,14 @@ describe("ZapBondage", () => {
     let oracle:TestProvider;
     let subscriber:TestClient;
     let dispatch:Dispatch;
-    
+    let offchainsubscriber:OffChainClient;
     let allocatedAmt: number;
 
     let signers: any;
     let subscriberAccount:any
     let owner:any;
     
-    
+    let OracleSigner:any;
     let broker:any;
     let escrower:any;
     let escrower2:any;
@@ -103,7 +103,8 @@ describe("ZapBondage", () => {
         signers = await ethers.getSigners();
         owner=signers[0]
         subscriberAccount=signers[1];
-        oracle=signers[2];
+        OracleSigner=signers[2];
+
         broker=signers[3];
         escrower=signers[4];
         escrower2=signers[5];
@@ -114,7 +115,10 @@ describe("ZapBondage", () => {
             "ZapCoordinator",
             signers[0]
           );        
-    
+          const offchainFactory = await ethers.getContractFactory(
+            "OffChainClient",
+            signers[0]
+          );   
           const dbFactory = await ethers.getContractFactory(
             "Database",
             signers[0]
@@ -179,19 +183,29 @@ describe("ZapBondage", () => {
  
          await coordinator.updateAllDependencies();
       
-         subscriber = (await subscriberFactory.deploy( 
+        subscriber = (await subscriberFactory.deploy( 
           zapToken.address,
           dispatch.address,
           bondage.address,
           registry.address)) as TestClient;
+        
+        offchainsubscriber = (await offchainFactory.deploy( 
+            zapToken.address,
+            dispatch.address,
+            bondage.address,
+            registry.address,
+            OracleSigner.address)) as OffChainClient;
+        
 
         await subscriber.deployed()
-        
+        await offchainsubscriber.deployed()
         oracle= await (await oracleFactory.deploy(registry.address,false)) as TestProvider;
  
-         oracle = await oracle.deployed()
+        oracle = await oracle.deployed()
 
     })
+    
+    
     async function prepareTokens(allocAddress = subscriberAccount) {
       // console.log("allocate")
        await zapToken.allocate(owner.address, tokensForOwner)
@@ -200,7 +214,9 @@ describe("ZapBondage", () => {
       // console.log("approve")
        await zapToken.connect(allocAddress).approve(bondage.address, approveTokens)
        
-   }
+   
+   
+      }
    async function prepareProvider( account = owner, curveParams = piecewiseFunction) {
     //   console.log("init provider")
       
@@ -209,6 +225,9 @@ describe("ZapBondage", () => {
       
        
       await registry.connect(account).initiateProviderCurve(spec1, curveParams, zeroAddress);
+      await registry.connect(account).initiateProviderCurve(spec2, curveParams, zeroAddress);
+      await registry.connect(account).initiateProviderCurve(spec3, curveParams, zeroAddress);
+      await registry.connect(account).initiateProviderCurve(spec4, curveParams, zeroAddress);
    }
    
     function validateEvents(events:any,expected:string[]){
@@ -222,6 +241,11 @@ describe("ZapBondage", () => {
       })
 
     }
+    let abi = [
+     "event Incoming(uint256 indexed id,address indexed provider,address indexed subscriber,string query,bytes32 endpoint,bytes32[] endpointParams,bool onchainSubscriber)"
+    ];
+  
+    let IncomingInterface = new ethers.utils.Interface(abi)
         it("DISPATCH_1 - respond1() - Check that we can make a simple query and the correct events are emitted", async function () {
           await prepareProvider();
           await prepareTokens();
@@ -247,10 +271,10 @@ describe("ZapBondage", () => {
           await prepareTokens();
 
           await expect(subscriber.connect(subscriberAccount).testQuery(owner.address, query, spec1, params)).to.reverted;
+        });
 
 
-
-        it("DISPATCH_3 - query() - Check query function will not be performed if msg.sender is not subscriber", async function () {
+       /**  it("DISPATCH_3 - query() - Check query function will not be performed if msg.sender is not subscriber", async function () {
             await prepareProvider();
             await prepareTokens();
             await zapToken.connect(subscriberAccount).approve(bondage.address, approveTokens);
@@ -258,10 +282,10 @@ describe("ZapBondage", () => {
             await bondage.connect(subscriberAccount).delegateBond(subscriber.address, owner.address, spec1, 10);
 
             
-            await expect(subscriber.connect(escrower).testQuery(owner.address, query, spec1, params)).to.reverted;
+            //await expect(subscriber.connect(escrower).testQuery(owner.address, query, spec1, params)).to.reverted;
             //await expect(this.test.dispatch.query(oracleAddr, query, spec1, params, {from: accounts[4]})).to.be.eventually.rejectedWith(EVMRevert);
         });
-
+        **/
 
         it("DISPATCH_4 - query() - Check that our contract will revert with an invalid endpoint", async function () {
           await prepareProvider();
@@ -276,5 +300,45 @@ describe("ZapBondage", () => {
 
           await expect(subscriber.connect(subscriberAccount).testQuery(owner.address, query, badSpec, params)).to.reverted;
         })
-  })
+        it("DISPATCH_5 - query() - test a query to an offchain subscriber", async function () {
+          await prepareProvider();
+          await prepareTokens();      
+           
+          await zapToken.connect(subscriberAccount).approve(bondage.address, approveTokens);
+          
+          await bondage.connect(subscriberAccount).delegateBond(offchainsubscriber.address, owner.address, spec2, 100);
+                 
+          let result=await offchainsubscriber.connect(subscriberAccount).testQuery(owner.address, query, spec2, params)
+         
+          let r=await result.wait()
+          let incoming:any=r.events ?? [] as Event[];
+          
+          let decoded=(IncomingInterface.parseLog(incoming[1]))
+          console.log(decoded.args)
+         
+          let CallbackResp=await (await offchainsubscriber.connect(OracleSigner).Callback(1, 'Hello')).wait() 
+          let logs:any=CallbackResp.events ?? [] as Event[];
+         
+          expect(logs[0].event).to.equal('Result1')
+         
+          
+      });
+      it("DISPATCH_6 - query() - test a query to an offchain subscriber fails from unathorized ", async function () {
+        await prepareProvider();
+        await prepareTokens();
+      
+
+          
+        await zapToken.connect(subscriberAccount).approve(bondage.address, approveTokens);
+        console.log("delegating")
+        await bondage.connect(subscriberAccount).delegateBond(offchainsubscriber.address, owner.address, spec2, 100);
+               
+        let result=await offchainsubscriber.connect(subscriberAccount).testQuery(owner.address, query, spec2, params)
+      
+        await expect(offchainsubscriber.connect(subscriberAccount).Callback(1, 'Hello')).to.reverted
+      
+        
+    });
+
+  
 })
