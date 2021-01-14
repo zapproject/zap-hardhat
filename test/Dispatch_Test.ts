@@ -100,6 +100,7 @@ describe("ZapBondage", () => {
     let escrower2:any;
     let arbiter:any;
     beforeEach( async()=>{
+      console.log(getEventHashSigs())
         signers = await ethers.getSigners();
         owner=signers[0]
         subscriberAccount=signers[1];
