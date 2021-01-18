@@ -682,53 +682,6 @@
         "PiecewiseLogic"
       ]
     },
-    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/arbiter/Arbiter.sol": {
-      "lastModificationDate": 1609606760740,
-      "sourceName": "contracts/platform/arbiter/Arbiter.sol",
-      "solcConfig": {
-        "version": "0.5.1",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../../lib/ownership/Upgradable.sol",
-        "../../lib/lifecycle/Destructible.sol",
-        "../bondage/BondageInterface.sol",
-        "./ArbiterInterface.sol",
-        "../database/DatabaseInterface.sol"
-      ],
-      "versionPragmas": [
-        "^0.5.1"
-      ],
-      "artifacts": [
-        "Arbiter"
-      ]
-    },
     "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/arbiter/ArbiterInterface.sol": {
       "lastModificationDate": 1609606760740,
       "sourceName": "contracts/platform/arbiter/ArbiterInterface.sol",
@@ -1270,6 +1223,103 @@
       ],
       "artifacts": [
         "Dispatch"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/lib/platform/OffChainClient.sol": {
+      "lastModificationDate": 1610567008380,
+      "sourceName": "contracts/lib/platform/OffChainClient.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./Client.sol",
+        "../../platform/dispatch/DispatchInterface.sol",
+        "../../platform/bondage/BondageInterface.sol",
+        "../../platform/registry/RegistryInterface.sol",
+        "./OnChainProvider.sol",
+        "../ERC20.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "OffChainClient"
+      ]
+    },
+    "/home/jjj/ZAP/hardhat_fork/zap-hardhat/contracts/platform/arbiter/Arbiter.sol": {
+      "lastModificationDate": 1610660093670,
+      "sourceName": "contracts/platform/arbiter/Arbiter.sol",
+      "solcConfig": {
+        "version": "0.5.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../lib/ownership/Upgradable.sol",
+        "../../lib/lifecycle/Destructible.sol",
+        "../bondage/BondageInterface.sol",
+        "./ArbiterInterface.sol",
+        "../database/DatabaseInterface.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.5.1"
+      ],
+      "artifacts": [
+        "Arbiter"
       ]
     }
   }

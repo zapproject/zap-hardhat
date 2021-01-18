@@ -7,7 +7,7 @@ import "../bondage/BondageInterface.sol";
 import "./ArbiterInterface.sol";
 import "../database/DatabaseInterface.sol";
 
-
+import "hardhat/console.sol";
 contract Arbiter is Destructible, ArbiterInterface, Upgradable {
     // Called when a data purchase is initiated
     event DataPurchase(
@@ -213,6 +213,7 @@ contract Arbiter is Destructible, ArbiterInterface, Upgradable {
         view
         returns (uint64)
     {
+        //console.log(db);
         return uint64(db.getNumber(keccak256(abi.encodePacked('subscriptions', providerAddress, subscriberAddress, endpoint, 'dots'))));
     }
 

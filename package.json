@@ -8,6 +8,7 @@
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
+    "prettier-format": "prettier --config .prettierrc 'test/*.ts'  --write",
     "coverage": "npm run build && npx hardhat coverage --temp artifacts --network coverage"
   },
   "author": "ZapProtocol",
