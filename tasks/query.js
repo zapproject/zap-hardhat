@@ -2,7 +2,7 @@ const { task, taskArgs } = require("hardhat/config");
 require("hardhat-deploy-ethers");
 require("hardhat-deploy");
 
-task("query", "Calls dispatch.query on the first 20 oracles using the proper endpointParams")
+task("query", "Calls dispatch.query on the first oracle using the proper endpointParams")
 
     .setAction(async () => {
         
@@ -48,9 +48,8 @@ task("query", "Calls dispatch.query on the first 20 oracles using the proper end
 
         await dispatch.query('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', "This is my first query", '0x52616d616e756a616e0000000000000000000000000000000000000000000000', ['0x4100000000000000000000000000000000000000000000000000000000000000'])
         .then((res) => {
-            //return res;
-            response.then(function(result) {
-                console.log(result)
+            console.log(res);
+            
             })
         
         .catch((err) => {
@@ -59,5 +58,4 @@ task("query", "Calls dispatch.query on the first 20 oracles using the proper end
         //console.log(dispatch);
 
     
-    })
     })
