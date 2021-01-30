@@ -15,6 +15,7 @@ import './tasks/initProvider';
 import './tasks/initProviderCurve';
 import './tasks/setEndpointParams';
 import './tasks/bond';
+import './tasks/query';
 
 
 // TODO: reenable solidity-coverage when it works

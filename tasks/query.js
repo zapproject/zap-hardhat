@@ -1,4 +1,3 @@
-const { ethers } = require("ethers");
 const { task, taskArgs } = require("hardhat/config");
 require("hardhat-deploy-ethers");
 require("hardhat-deploy");
@@ -6,13 +5,6 @@ require("hardhat-deploy");
 task("query", "Calls dispatch.query on the first 20 oracles using the proper endpointParams")
 
     .setAction(async () => {
-
-
-        // Stores the endpointParams of each endpoint of all 20 providers
-        const endpointParams = ["A, B", "C, D", "E, F", "G, H", "I, J", "K, L", "M, N", "O, P", "Q, R", "S, T", "U, V", "W, X", "Y, Z", "aa, bb", "cc, dd", "ee, ff", "gg, hh", "ii, jj", "kk, ll", "mm, nn"];
-
-        // Stores the endpoints of all 20 providers
-        const endpoint = ["Ramanujan", "Lagrange", "Wiles", "Jacobi", "Turing", "Riemann", "Poincare", "Hilbert", "Fibonacci", "Bernoulli", "Pythagoras", "Gauss", "Newton", "Euler", "Archimedes", "Euclid", "Merkle", "Shamir", "Buterin", "Nakamoto"];
         
         // Test accounts
         const signers = await ethers.getSigners();
@@ -24,4 +16,46 @@ task("query", "Calls dispatch.query on the first 20 oracles using the proper end
         // Connection to Dispatch
         const Dispatch = await ethers.getContractFactory("Dispatch");
         const dispatch = await Dispatch.attach(await coordinator.getContract('DISPATCH'));
+
+        // Stores the endpoints of all 20 providers
+        let endpoint = ["Ramanujan", "Lagrange", "Wiles", "Jacobi", "Turing", "Riemann", "Poincare", "Hilbert", "Fibonacci", "Bernoulli", "Pythagoras", "Gauss", "Newton", "Euler", "Archimedes", "Euclid", "Merkle", "Shamir", "Buterin", "Nakamoto"];
+
+      //  endpoint = endpoint.map(name => ethers.utils.formatBytes32String(name));
+
+        // Stores the endpointParams of each endpoint of all 20 providers
+        // let endpointParams = [
+        //     ["A"],
+        //     ["C"],
+        //     ["E"],
+        //     ["G"],
+        //     ["I"],
+        //     ["K"],
+        //     ["M"],
+        //     ["O"],
+        //     ["Q"],
+        //     ["S"],
+        //     ["U"],
+        //     ["W"],
+        //     ["Y"],
+        //     ["aa"],
+        //     ["cc"],
+        //     ["ee"],
+        //     ["gg"],
+        //     ["ii"],
+        //     ["kk"],
+        //     ["mm"]
+        // ];
+
+        await dispatch.query('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', "This is my first query", '0x52616d616e756a616e0000000000000000000000000000000000000000000000', ['0x4100000000000000000000000000000000000000000000000000000000000000'])
+        .then((res) => {
+            //return res;
+            console.log(res);
+        })
+        .catch((err) => {
+            return err;
+        })
+        //console.log(dispatch);
+
+       
+     
     })
