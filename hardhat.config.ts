@@ -14,8 +14,8 @@ import './tasks/buyzap';
 import './tasks/initProvider';
 import './tasks/initProviderCurve';
 import './tasks/setEndpointParams';
-import './tasks/dispatch';
 import './tasks/bond';
+import './tasks/dispatch';
 
 
 // TODO: reenable solidity-coverage when it works
@@ -56,32 +56,3 @@ const config: HardhatUserConfig = {
 };
 
 export default config;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,3 @@
-
-
 import { ethers } from "hardhat";
 
 const hre = require("hardhat")
@@ -118,8 +116,8 @@ async function main() {
   const Database = await database.deploy();
 
   const dispatch = await ethers.getContractFactory('Dispatch', signers[0])
- 
-
+  const Dispatch = await dispatch.deploy(Coordinator.address);
+  console.log(`Dispatch address is ${Dispatch.address}`)
   const faucetContract = await ethers.getContractFactory('Faucet', signers[0]);
   const faucet = await faucetContract.deploy(zapToken.address);
   await faucet.deployed();
@@ -138,14 +136,15 @@ async function main() {
   await Coordinator.addImmutableContract('ARBITER', Arbiter.address);
   await Coordinator.addImmutableContract('FAUCET', faucet.address);
   await Coordinator.addImmutableContract('ZAP_TOKEN', zapToken.address);
+  //await Coordinator.addImmutableContract('DISPATCH', Dispatch.address)
   //await Coordinator.addImmutableContract('BONDAGE', Bondage.address);
   await Coordinator.updateContract('REGISTRY', Registry.address);
   await Coordinator.updateContract('CURRENT_COST', CurrentCost.address);
+  await Coordinator.updateContract('DISPATCH', Dispatch.address);
 
 
 
   await Coordinator.updateContract('BONDAGE', Bondage.address);
- 
   await Coordinator.updateAllDependencies();
   await hre.run('faucet')
   await hre.run('initiateProvider')
@@ -182,7 +181,7 @@ async function main() {
     OracleSigner.address
   ))
 
-  
+  await subscriber.deployed();
   await offchainsubscriber.deployed();
   const oracle = (await oracleFactory.deploy(
     Registry.address,

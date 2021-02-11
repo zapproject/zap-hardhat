@@ -176,14 +176,14 @@ describe('ZapBondage', () => {
     // console.log("updating Contracts")
     await coordinator.updateContract('REGISTRY', registry.address);
     await coordinator.updateContract('CURRENT_COST', cost.address);
-    
+ 
 
     bondage = (await bondFactory.deploy(coordinator.address)) as Bondage;
  
     await coordinator.updateContract('BONDAGE', bondage.address);
     
     
-   
+    await coordinator.updateContract('DISPATCH', dispatch.address);
 
     await coordinator.updateAllDependencies();
 
@@ -310,6 +310,7 @@ describe('ZapBondage', () => {
       .connect(subscriberAccount)
       .testQuery(oracle.address, query, spec, params);
     let r = await result.wait();
+    //validateEvents(r.events, expected);
 
     let expected = [
       'Escrowed(address,address,bytes32,uint256)',
@@ -339,7 +340,6 @@ describe('ZapBondage', () => {
             await zapToken.connect(subscriberAccount).approve(bondage.address, approveTokens);
             
             await bondage.connect(subscriberAccount).delegateBond(subscriber.address, owner.address, spec1, 10);
-
             
             //await expect(subscriber.connect(escrower).testQuery(owner.address, query, spec1, params)).to.reverted;
             //await expect(this.test.dispatch.query(oracleAddr, query, spec1, params, {from: accounts[4]})).to.be.eventually.rejectedWith(EVMRevert);

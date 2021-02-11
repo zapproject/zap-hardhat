@@ -5,7 +5,6 @@ import "../../platform/bondage/BondageInterface.sol";
 import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
 import "../../platform/registry/RegistryInterface.sol";
 import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
-import "hardhat/console.sol";
 contract TokenDotFactory is Ownable {
 
     CurrentCostInterface currentCost;
