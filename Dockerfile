@@ -1,5 +1,8 @@
 FROM node:alpine 
 
+ARG pm2_public
+ARG pm2_secret
+
 # Install app dependencies
 #COPY package.json /
 COPY ./package*.json ./
