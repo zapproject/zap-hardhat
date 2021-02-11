@@ -32,8 +32,8 @@ RUN npm run build
 RUN npm install pm2 -g
 
 # pubic/secret key for pm2 monitoring: will change to zap-admin's credentials once done. (within .env or similar)
-# ENV PM2_PUBLIC_KEY bdh9q68spo1eiqn
-# ENV PM2_SECRET_KEY qs29ye4cnzybyl4
+ENV PM2_PUBLIC_KEY $pm2_public
+ENV PM2_SECRET_KEY $pm2_secret
 
 
 CMD ["chmod", "+x", "./start.sh"]
