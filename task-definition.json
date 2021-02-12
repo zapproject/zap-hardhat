@@ -2,7 +2,7 @@
   "ipcMode": null,
   "executionRoleArn": "arn:aws:iam::944238940241:role/DevNetExecutionRole",
   "containerDefinitions": [
-    {
+    { 
       "dnsSearchDomains": [],
       "environmentFiles": [],
       "logConfiguration": null,
