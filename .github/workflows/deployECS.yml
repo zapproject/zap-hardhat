@@ -27,7 +27,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: zap-hardhat
+          ECR_REPOSITORY: zaphardhat
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build --build-arg pm2_public=${{ secrets.PM2_PUBLIC_KEY }} --build-arg pm2_secret=${{ secrets.PM2_SECRET_KEY }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
