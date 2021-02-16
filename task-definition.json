@@ -1,6 +1,6 @@
 {
   "ipcMode": null,
-  "executionRoleArn": "arn:aws:iam::944238940241:role/DevNetExecutionRole",
+  "executionRoleArn": "arn:aws:iam::944238940241:role/DevNetAlphaExecutionRole",
   "containerDefinitions": [
     {
       "dnsSearchDomains": [],
@@ -9,7 +9,7 @@
         "logDriver": "awslogs",
         "secretOptions": [],
         "options": {
-          "awslogs-group": "/ecs/ZapHardhatServiceTaskDefinition",
+          "awslogs-group": "/ecs/ZapHardhat",
           "awslogs-region": "us-east-2",
           "awslogs-stream-prefix": "ecs"
         }
@@ -37,7 +37,7 @@
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "944238940241.dkr.ecr.us-east-2.amazonaws.com/zap-hardhat",
+      "image": "944238940241.dkr.ecr.us-east-2.amazonaws.com/zaphardhat",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -54,18 +54,18 @@
       "dockerLabels": {},
       "systemControls": [],
       "privileged": null,
-      "name": "zap-hardhat"
+      "name": "zaphardhat"
     }
   ],
   "placementConstraints": [],
-  "memory": "512",
-  "taskRoleArn": "arn:aws:iam::944238940241:role/DevNetTaskRole",
+  "memory": "4096",
+  "taskRoleArn": "arn:aws:iam::944238940241:role/DevNetAlphaTaskRole",
   "compatibilities": [
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:us-east-2:944238940241:task-definition/zap-hardhat:14",
-  "family": "zap-hardhat",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-2:944238940241:task-definition/zaphardhat:1",
+  "family": "zaphardhat",
   "requiresAttributes": [
     {
       "targetId": null,
@@ -127,8 +127,8 @@
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "256",
-  "revision": 14,
+  "cpu": "1024",
+  "revision": 1,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
