@@ -16,6 +16,7 @@ import './tasks/initProviderCurve';
 import './tasks/setEndpointParams';
 import './tasks/bond';
 import './tasks/dispatch';
+import './tasks/genericoracle'
 
 
 // TODO: reenable solidity-coverage when it works
