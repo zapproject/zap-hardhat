@@ -25,7 +25,7 @@ contract ERC721 is Context, ERC165, NFTInterface, IERC721Metadata {
 
     // Token symbol
     string private _symbol;
-
+    string private _baseURI;
     // Mapping from token ID to owner address
     mapping (uint256 => address) private _owners;
 
@@ -38,6 +38,8 @@ contract ERC721 is Context, ERC165, NFTInterface, IERC721Metadata {
     // Mapping from owner to operator approvals
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
+    mapping(uint=>string) private _tokenURIs;
+   
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
@@ -89,27 +91,41 @@ contract ERC721 is Context, ERC165, NFTInterface, IERC721Metadata {
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    function tokenURI(uint256 tokenId) external override view returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
-        string memory baseURI = _baseURI();
-        return bytes(baseURI).length > 0
-            ? string(abi.encodePacked(baseURI, tokenId.toString()))
-            : '';
+        string memory _tokenURI = _tokenURIs[tokenId];
+
+        // Even if there is a base URI, it is only appended to non-empty token-specific URIs
+        if (bytes(_tokenURI).length == 0) {
+            return "";
+        } else {
+            // abi.encodePacked is being used to concatenate strings
+            return string(abi.encodePacked(_baseURI, _tokenURI));
+        }
     }
 
     /**
      * @dev Base URI for computing {tokenURI}. Empty by default, can be overriden
      * in child contracts.
      */
-    function _baseURI() internal view virtual returns (string memory) {
-        return "";
+    function getbaseURI() internal view virtual returns (string memory) {
+        return  _baseURI;
     }
-
+     /**
+     * @dev setBase URI for computing . Empty by default, can be overriden
+     * in child contracts.
+     */
+    function _setBaseURI(string memory baseURI_) internal{
+        _baseURI=baseURI_;
+    }
+    function _setTokenURI(uint256 tokenID,string memory _URI) internal{
+        _tokenURIs[tokenID]=_URI;
+    }
     /**
      * @dev See {IERC721-approve}.
      */
-    function approve(address to, uint256 tokenId) public virtual override {
+    function approve(address to, uint256 tokenId) public virtual  {
         address owner = ERC721.ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
@@ -123,7 +139,7 @@ contract ERC721 is Context, ERC165, NFTInterface, IERC721Metadata {
     /**
      * @dev See {IERC721-getApproved}.
      */
-    function getApproved(uint256 tokenId) public view virtual override returns (address) {
+    function getApproved(uint256 tokenId) public view virtual override  returns (address) {
         require(_exists(tokenId), "ERC721: approved query for nonexistent token");
 
         return _tokenApprovals[tokenId];
