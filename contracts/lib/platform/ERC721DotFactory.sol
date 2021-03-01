@@ -1,4 +1,5 @@
-import "../token/TokenFactoryInterface.sol";
+
+pragma solidity ^0.5.1;
 // Replace with 721 Interface
 //import "../token/FactoryTokenInterface.sol";
 import "../ownership/ZapCoordinatorInterface.sol";
@@ -6,7 +7,28 @@ import "../../platform/bondage/BondageInterface.sol";
 import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
 import "../../platform/registry/RegistryInterface.sol";
 import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
+import "../token/FactoryTokenInterface.sol";
+interface NFTTokenInterface  {
 
+           event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+           event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+           event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+           function mint(address to,uint256 tokenId) external;
+           function burnFrom(uint256 tokenId) external;
+           function balanceOf(address _owner) external view returns (uint256);
+           function ownerOf(uint256 _tokenId) external view returns (address);
+           function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata data) external;
+           function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+           function transferFrom(address _from, address _to, uint256 _tokenId) external;
+           function setApprovalForAll(address _operator, bool _approved) external;
+           function getApproved(uint256 _tokenId) external view returns (address);
+           function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+           function setBaseURI(string calldata baseMetadata) external;
+           function setURI(uint256 tokenId,string calldata uri) external;
+}
+interface TokenFactoryInterface{
+    function create(string calldata _name, string calldata _symbol) external returns (NFTTokenInterface);
+}
 contract ERC721DotFactory {
     address[] public deployedFactories;
     address public coordinator;
@@ -18,7 +40,7 @@ contract ERC721DotFactory {
         factory=_factory;
     }
     function deployFactory(uint256 providerPubKey,bytes32 providerTitle ) public returns(address){
-        TokenDotFactory TDF=  new TokenDotFactory(coordinator,factory,providerPubKey,providerTitle);
+        NFTDotTokenFactory TDF=  new NFTDotTokenFactory(coordinator,factory,providerPubKey,providerTitle);
         TDF.transferOwnership(msg.sender);
         deployedFactories.push(address(TDF));
         emit newDotFactory(address(TDF),providerPubKey,providerTitle);
@@ -29,15 +51,20 @@ contract ERC721DotFactory {
     }
 }
 
-contract TokenDotFactory is Ownable {
+contract NFTDotTokenFactory is Ownable {
 
     CurrentCostInterface currentCost;
     FactoryTokenInterface public reserveToken;
     ZapCoordinatorInterface public coord;
     TokenFactoryInterface public tokenFactory;
     BondageInterface bondage;
+    NFTTokenInterface public ERC721;
+    mapping(bytes32 => address) public curves;
+    mapping(bytes32=>uint256) public tokensMinted;
+    mapping(bytes32=>bool) public whitelistedCurve; 
+    mapping(address=>mapping(bytes32=>string)) public whitelisting;
 
-    mapping(bytes32 => address) public curves; // map of endpoint specifier to token-backed dotaddress
+    mapping(bytes32 => uint) public curvesTokenPrice;// map of endpoint specifier to token-backed dotaddress
     bytes32[] public curves_list; // array of endpoint specifiers
     event DotTokenCreated(address tokenAddress);
 
@@ -45,45 +72,57 @@ contract TokenDotFactory is Ownable {
         address coordinator, 
         address factory,
         uint256 providerPubKey,
-        bytes32 providerTitle 
+        bytes32 providerTitle
+        
     ) public {
         coord = ZapCoordinatorInterface(coordinator); 
         reserveToken = FactoryTokenInterface(coord.getContract("ZAP_TOKEN"));
         //always allow bondage to transfer from wallet
+        
         reserveToken.approve(coord.getContract("BONDAGE"), ~uint256(0));
         tokenFactory = TokenFactoryInterface(factory);
 
         RegistryInterface registry = RegistryInterface(coord.getContract("REGISTRY")); 
         registry.initiateProvider(providerPubKey, providerTitle);
     }
-
+    //set nft price add price unit specifier
+    // tokenuri string
     function initializeCurve(
         bytes32 specifier, 
         bytes32 symbol, 
-        int256[] memory curve
+        int256[] memory curve,
+        uint price,
+        string memory baseMetadata,
+        bool whitelisted
     ) public  onlyOwner returns(address) {
         
         require(curves[specifier] == address(0), "Curve specifier already exists");
         
         RegistryInterface registry = RegistryInterface(coord.getContract("REGISTRY")); 
         require(registry.isProviderInitiated(address(this)), "Provider not intiialized");
-
+        whitelistedCurve[specifier]=whitelisted;
         registry.initiateProviderCurve(specifier, curve, address(this));
         curves[specifier] = newToken(bytes32ToString(specifier), bytes32ToString(symbol));
         curves_list.push(specifier);
-        
+        curvesTokenPrice[specifier]=price;
         registry.setProviderParameter(specifier, toBytes(curves[specifier]));
-        
+        ERC721.setBaseURI(baseMetadata);
         emit DotTokenCreated(curves[specifier]);
         return curves[specifier];
     }
-
+    function whitelistBonder(bytes32  specifier,address bonder,string memory uri) public onlyOwner{
+        require(whitelistedCurve[specifier]==true,"curve must be  whitelisted");
+        whitelisting[bonder][specifier]=uri;
+    }
 
     event Bonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender); 
-
+    //function approveForBond(address user, string memory metadata) public onlyOwner;
     //whether this contract holds tokens or coming from msg.sender,etc
-    function bond(bytes32 specifier, uint numDots) public  {
-
+   
+    // needs nft price 
+    function bondWhiteListed(bytes32 specifier) public  {
+        require(whitelistedCurve[specifier]==true,"curve must be  whitelisted");
+        uint numDots=curvesTokenPrice[specifier];
         bondage = BondageInterface(coord.getContract("BONDAGE"));
         uint256 issued = bondage.getDotsIssued(address(this), specifier);
 
@@ -94,29 +133,63 @@ contract TokenDotFactory is Ownable {
             reserveToken.transferFrom(msg.sender, address(this), numReserve),
             "insufficient accepted token numDots approved for transfer"
         );
+        require(bytes(whitelisting[msg.sender][specifier]).length>0,"user must be whitelisted for metadata");
+
+        uint id= uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
 
         reserveToken.approve(address(bondage), numReserve);
         bondage.bond(address(this), specifier, numDots);
-        FactoryTokenInterface(curves[specifier]).mint(msg.sender, numDots);
+
+        NFTTokenInterface(curves[specifier]).mint(msg.sender, id);
+        NFTTokenInterface(curves[specifier]).setURI(id,whitelisting[msg.sender][specifier]);
+        whitelisting[msg.sender][specifier]="";
+
         emit Bonded(specifier, numDots, msg.sender);
 
     }
+      function bond(bytes32 specifier) public  {
+        uint numDots=curvesTokenPrice[specifier];
+        bondage = BondageInterface(coord.getContract("BONDAGE"));
+        uint256 issued = bondage.getDotsIssued(address(this), specifier);
+        require(whitelistedCurve[specifier]==false,"curve must be not whitelisted");
+        CurrentCostInterface cost = CurrentCostInterface(coord.getContract("CURRENT_COST"));
+        uint256 numReserve = cost._costOfNDots(address(this), specifier, issued + 1, numDots - 1);
 
+        require(
+            reserveToken.transferFrom(msg.sender, address(this), numReserve),
+            "insufficient accepted token numDots approved for transfer"
+        );
+        require(bytes(whitelisting[msg.sender][specifier]).length>0,"user must be whitelisted for metadata");
+
+        uint id= uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
+
+        reserveToken.approve(address(bondage), numReserve);
+        bondage.bond(address(this), specifier, numDots);
+
+        NFTTokenInterface(curves[specifier]).mint(msg.sender, id);
+       // NFTTokenInterface(curves[specifier]).setURI(id,whitelisting[msg.sender][specifier]);
+        //whitelisting[msg.sender][specifier]="";
+
+        emit Bonded(specifier, numDots, msg.sender);
+
+    }
     event Unbonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender); 
 
     //whether this contract holds tokens or coming from msg.sender,etc
-    function unbond(bytes32 specifier, uint numDots) public {
+    function unbond(bytes32 specifier, uint tokenID) public {
+        uint numDots=curvesTokenPrice[specifier];
         bondage = BondageInterface(coord.getContract("BONDAGE"));
         uint issued = bondage.getDotsIssued(address(this), specifier);
 
         currentCost = CurrentCostInterface(coord.getContract("CURRENT_COST"));
         uint reserveCost = currentCost._costOfNDots(address(this), specifier, issued + 1 - numDots, numDots - 1);
-
+       
         //unbond dots
         bondage.unbond(address(this), specifier, numDots);
         //burn dot backed token
-        FactoryTokenInterface curveToken = FactoryTokenInterface(curves[specifier]);
-        curveToken.burnFrom(msg.sender, numDots);
+        NFTTokenInterface  curveToken = NFTTokenInterface(curves[specifier]);
+        require(curveToken.ownerOf(tokenID) == msg.sender,"token must be owned by sender");
+        curveToken.burnFrom( tokenID);
 
         require(reserveToken.transfer(msg.sender, reserveCost), "Error: Transfer failed");
         emit Unbonded(specifier, numDots, msg.sender);
@@ -131,7 +204,7 @@ contract TokenDotFactory is Ownable {
         onlyOwner
         returns (address tokenAddress) 
     {
-        FactoryTokenInterface token = tokenFactory.create(name, symbol);
+        NFTTokenInterface token = tokenFactory.create(name, symbol);
         tokenAddress = address(token);
         return tokenAddress;
     }

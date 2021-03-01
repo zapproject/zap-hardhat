@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 import './token721.sol';
-
+import '../../utils/Address.sol';
 
 contract Ownable {
     address  public owner;
@@ -25,8 +25,8 @@ contract Ownable {
 }
 
 contract ownable721 is ERC721,Ownable{
-bool public mintingFinished=false;
-modifier canMint() {
+    bool public mintingFinished=false;
+    modifier canMint() {
         require(!mintingFinished);
         _;
     }
@@ -38,14 +38,22 @@ modifier canMint() {
      constructor( string memory name_, string memory symbol_) ERC721(name_,symbol_){
 
     }
-   function mint(address to,uint256 tokenId) public hasMintPermission canMint {
+   function mint(address to,uint256 tokenId) public onlyOwner canMint {
      
          _safeMint(to, tokenId);
    }
-   function setURI(uint256 tokenId,string memory uri) public hasMintPermission canMint{
+   function setURI(uint256 tokenId,string memory uri) public onlyOwner canMint{
         _setTokenURI(tokenId,uri);
    }
-   function setBaseURI(string memory base) public hasMintPermission canMint{
+   function setBaseURI(string memory base) public onlyOwner canMint{
         _setBaseURI(base);
+   }
+   
+  function burnFrom(uint tokenID) public onlyOwner{
+      //
+      _burn(tokenID);
+    }
+   function toggleMinting() public  onlyOwner{
+       mintingFinished=!mintingFinished;
    }
 }
