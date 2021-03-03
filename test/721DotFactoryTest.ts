@@ -1,3 +1,4 @@
+
 import { ethers } from 'hardhat';
 import { solidity } from 'ethereum-waffle';
 import chai from 'chai';
@@ -11,14 +12,14 @@ import { ZapToken } from '../typechain/ZapToken';
 import { CurrentCost } from '../typechain/CurrentCost';
 import { Erc721DotFactory } from '../typechain/Erc721DotFactory';
 import { Erc721DotFactoryFactory} from '../typechain/Erc721DotFactoryFactory';
-import { Erc721Factory } from '../typechain/Erc721Factory';
-import { FactoryToken } from '../typechain/FactoryToken';
+import { NftTokenFactory } from '../typechain/NftTokenFactory';
+import { Erc721 } from '../typechain/Erc721';
 chai.use(solidity);
 const { expect } = chai;
 
 const publicKey = 77;
-const title ='';
-const title2 ='';
+const title ='0x048a2991c2676296b330734992245f5ba6b98174d3f1907d795b7639e92ce532';
+const title2 ='0x077a2991c2676296b330734992245f5ba6b98174d3f1907d795b7639e92ce532';
 const routeKeys = [1];
 const params = ['param1', 'param2'];
 
@@ -119,7 +120,7 @@ describe('ZapBondage', () => {
   let arbiter: any;
   let dotTokenFactory: any;
   //let dotFactoryFactory:DotFactoryFactory;
-  let Erc721dotFactoryFactoryInstance:any;
+  let Erc721DotFactoryFactoryInstance:any;
   beforeEach(async () => {
     signers = await ethers.getSigners();
     owner = signers[0];
@@ -129,20 +130,22 @@ describe('ZapBondage', () => {
     escrower = signers[4];
     escrower2 = signers[5];
     arbiter = signers[6];
+
     dotTokenFactory = await ethers.getContractFactory(
-      'Erc721DotFactory',
+      'ERC721DotFactory',
       signers[0]
     );
   
-    factoryToken = await ethers.getContractFactory('FactoryToken', signers[0]);
+    factoryToken = await ethers.getContractFactory('ERC721', signers[0]);
     const zapTokenFactory = await ethers.getContractFactory(
       'ZapToken',
       signers[0]
     );
     const genericTokenFactory = await ethers.getContractFactory(
-      'TokenFactory',
+      'NFTTokenFactory',
       signers[0]
     );
+    // console.log(genericTokenFactory);
     const coordinatorFactory = await ethers.getContractFactory(
       'ZapCoordinator',
       signers[0]
@@ -158,12 +161,12 @@ describe('ZapBondage', () => {
       'CurrentCost',
       signers[0]
     );
-    const dotFactoryFactory = await ethers.getContractFactory(
-      'DotFactoryFactory',
-      signers[0]
-    );
+    // const dotFactoryFactory = await ethers.getContractFactory(
+    //   'Erc721DotFactoryFactory',
+    //   signers[0]
+    // );
     const bondFactory = await ethers.getContractFactory('Bondage', signers[0]);
-    tokenFactory = (await genericTokenFactory.deploy()) as Erc721Factory;
+    tokenFactory = (await genericTokenFactory.deploy()) as NftTokenFactory;
     await tokenFactory.deployed();
     zapToken = (await zapTokenFactory.deploy()) as ZapToken;
 
@@ -178,8 +181,8 @@ describe('ZapBondage', () => {
 
     registry = (await registryFactory.deploy(coordinator.address)) as Registry;
 
-    Erc721dotFactoryFactoryInstance=await dotFactoryFactory.deploy(coordinator.address, tokenFactory.address) as DotFactoryFactory;
-    await Erc721dotFactoryFactoryInstance.deployed()
+    // Erc721DotFactoryFactoryInstance=await dotFactoryFactory.deploy(coordinator.address, tokenFactory.address) as Erc721DotFactoryFactory;
+    // await Erc721DotFactoryFactoryInstance.deployed()
     
     await dataBase.transferOwnership(coordinator.address);
     await coordinator.addImmutableContract('DATABASE', dataBase.address);
@@ -214,166 +217,166 @@ describe('ZapBondage', () => {
   it('TOKEN_DOT_FACTORY_1 - constructor() - Check token dot factory initialization', async function () {
     console.log(tokenFactory.address);
     await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
+      // coordinator.address,
+      // tokenFactory.address,
+      "publicKey",
+      "title"
     );
   });
 
-  it('TOKEN_DOT_FACTORY_2 - newToken() - Check new token creation', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    await factory.deployed();
-    let tx = await factory.newToken('t1', 'tkn');
-    tx = await tx.wait();
+  // it('TOKEN_DOT_FACTORY_2 - newToken() - Check new token creation', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   await factory.deployed();
+  //   let tx = await factory.newToken('t1', 'tkn');
+  //   tx = await tx.wait();
 
-    await expect(
-      ethers.utils.getAddress(ethers.utils.hexStripZeros(tx.logs[0].topics[2]))
-    ).to.equal(factory.address);
-  });
+  //   await expect(
+  //     ethers.utils.getAddress(ethers.utils.hexStripZeros(tx.logs[0].topics[2]))
+  //   ).to.equal(factory.address);
+  // });
 
-  it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
-    tx = await tx.wait();
-    console.log(tx);
+  // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
+  //   tx = await tx.wait();
+  //   console.log(tx);
 
-    let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
-    console.log(dotTokenCreatedEvent);
-    await expect(dotTokenCreatedEvent).to.be.not.equal(null);
-  });
+  //   let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
+  //   console.log(dotTokenCreatedEvent);
+  //   await expect(dotTokenCreatedEvent).to.be.not.equal(null);
+  // });
 
-  it('TOKEN_DOT_FACTORY_4 - initializeCurve() - Exception thrown if curve specifier already exists', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
-    tx = await tx.wait();
-    console.log(tx);
-    let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
-    await expect(dotTokenCreatedEvent).to.be.not.equal(null);
+  // it('TOKEN_DOT_FACTORY_4 - initializeCurve() - Exception thrown if curve specifier already exists', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
+  //   tx = await tx.wait();
+  //   console.log(tx);
+  //   let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
+  //   await expect(dotTokenCreatedEvent).to.be.not.equal(null);
 
-    await expect(factory.initializeCurve(specifier, title, piecewiseFunction))
-      .to.reverted;
-  });
+  //   await expect(factory.initializeCurve(specifier, title, piecewiseFunction))
+  //     .to.reverted;
+  // });
 
-  it('TOKEN_DOT_FACTORY_5 - bond() - Check bonding', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
+  // it('TOKEN_DOT_FACTORY_5 - bond() - Check bonding', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
 
-    await factory.initializeCurve(specifier, title2, piecewiseFunction);
-    let reserveTokenAddr = await factory.reserveToken();
-    let reserveToken = await zapToken.attach(reserveTokenAddr);
-    await reserveToken.allocate(subscriber.address, 10000);
-    await reserveToken.connect(subscriber).approve(factory.address, 10000);
-    await factory.connect(subscriber).bond(specifier, 1);
+  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   let reserveTokenAddr = await factory.reserveToken();
+  //   let reserveToken = await zapToken.attach(reserveTokenAddr);
+  //   await reserveToken.allocate(subscriber.address, 10000);
+  //   await reserveToken.connect(subscriber).approve(factory.address, 10000);
+  //   await factory.connect(subscriber).bond(specifier, 1);
 
-    let subBalance = parseInt(
-      (await reserveToken.balanceOf(subscriber.address)).toString()
-    );
-    console.log(subBalance);
-    await expect(subBalance).to.be.not.equal(10000);
-  });
+  //   let subBalance = parseInt(
+  //     (await reserveToken.balanceOf(subscriber.address)).toString()
+  //   );
+  //   console.log(subBalance);
+  //   await expect(subBalance).to.be.not.equal(10000);
+  // });
 
-  it('TOKEN_DOT_FACTORY_6 - bond() - Check that user can not bond without tokens', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    await factory.initializeCurve(specifier, title2, piecewiseFunction);
-    let reserveTokenAddr = await factory.reserveToken();
-    let reserveToken = await zapToken.attach(reserveTokenAddr);
-    // await reserveToken.allocate(subscriber, 10000);
-    await reserveToken.connect(subscriber).approve(factory.address, 10000);
-    await expect(factory.connect(subscriber).bond(specifier, 1)).to.reverted;
-  });
+  // it('TOKEN_DOT_FACTORY_6 - bond() - Check that user can not bond without tokens', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   let reserveTokenAddr = await factory.reserveToken();
+  //   let reserveToken = await zapToken.attach(reserveTokenAddr);
+  //   // await reserveToken.allocate(subscriber, 10000);
+  //   await reserveToken.connect(subscriber).approve(factory.address, 10000);
+  //   await expect(factory.connect(subscriber).bond(specifier, 1)).to.reverted;
+  // });
 
-  it('TOKEN_DOT_FACTORY_7 - unbond() - Check unbonding', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    await factory.initializeCurve(specifier, title2, piecewiseFunction);
-    let reserveTokenAddr = await factory.reserveToken();
-    let reserveToken = await zapToken.attach(reserveTokenAddr);
-    await reserveToken.allocate(subscriber.address, 10000);
-    await reserveToken.connect(subscriber).approve(factory.address, 10000);
-    await factory.connect(subscriber).bond(specifier, 1);
-    console.log('finish bond');
-    let curveTokenAddr = await factory.getTokenAddress(specifier);
+  // it('TOKEN_DOT_FACTORY_7 - unbond() - Check unbonding', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   let reserveTokenAddr = await factory.reserveToken();
+  //   let reserveToken = await zapToken.attach(reserveTokenAddr);
+  //   await reserveToken.allocate(subscriber.address, 10000);
+  //   await reserveToken.connect(subscriber).approve(factory.address, 10000);
+  //   await factory.connect(subscriber).bond(specifier, 1);
+  //   console.log('finish bond');
+  //   let curveTokenAddr = await factory.getTokenAddress(specifier);
 
-    let curveToken = await factoryToken.attach(curveTokenAddr);
+  //   let curveToken = await factoryToken.attach(curveTokenAddr);
 
-    await curveToken.connect(subscriber).approve(factory.address, 1);
-    await factory.connect(subscriber).unbond(specifier, 1);
-  });
+  //   await curveToken.connect(subscriber).approve(factory.address, 1);
+  //   await factory.connect(subscriber).unbond(specifier, 1);
+  // });
 
-  it('TOKEN_DOT_FACTORY_8 - unbond() - Check that user can not unbond more than have', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    await factory.initializeCurve(specifier, title2, piecewiseFunction);
-    let reserveTokenAddr = await factory.reserveToken();
-    let reserveToken = await zapToken.attach(reserveTokenAddr);
-    await reserveToken.allocate(subscriber.address, 10000);
-    await reserveToken.connect(subscriber).approve(factory.address, 10000);
-    await factory.connect(subscriber).bond(specifier, 1);
-    console.log('finish bond');
-    let curveTokenAddr = await factory.getTokenAddress(specifier);
+  // it('TOKEN_DOT_FACTORY_8 - unbond() - Check that user can not unbond more than have', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   let reserveTokenAddr = await factory.reserveToken();
+  //   let reserveToken = await zapToken.attach(reserveTokenAddr);
+  //   await reserveToken.allocate(subscriber.address, 10000);
+  //   await reserveToken.connect(subscriber).approve(factory.address, 10000);
+  //   await factory.connect(subscriber).bond(specifier, 1);
+  //   console.log('finish bond');
+  //   let curveTokenAddr = await factory.getTokenAddress(specifier);
 
-    let curveToken = await factoryToken.attach(curveTokenAddr);
+  //   let curveToken = await factoryToken.attach(curveTokenAddr);
 
-    await curveToken.connect(subscriber).approve(factory.address, 1);
-    await expect(factory.connect(subscriber).unbond(specifier, 100)).to
-      .reverted;
-  });
+  //   await curveToken.connect(subscriber).approve(factory.address, 1);
+  //   await expect(factory.connect(subscriber).unbond(specifier, 100)).to
+  //     .reverted;
+  // });
 
-  it('TOKEN_DOT_FACTORY_9 - getTokenAddress() - Check curve token address', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    await factory.initializeCurve(specifier, title2, piecewiseFunction);
-    let curveTokenAddr = await factory.getTokenAddress(specifier);
-    await expect(curveTokenAddr).to.not.equal(zeroAddress);
-  });
-  it('TOKEN_DOT_FACTORY_10 -deploy through dot factory Factory ', async function () {
-    let factory = await dotFactoryFactoryInstance.deployFactory(      
-      publicKey,
-      title
-    );
-    let factories=await dotFactoryFactoryInstance.getFactories();
-   // console.log(factories) 
-    let Instantiated=await dotTokenFactory.attach(factories[0])
-    await Instantiated.initializeCurve(specifier, title2, piecewiseFunction)
-    //await factory.initializeCurve(specifier, title2, piecewiseFunction);
-    let curveTokenAddr = await Instantiated.getTokenAddress(specifier);
-    await expect(curveTokenAddr).to.not.equal(zeroAddress);
-  });
+  // it('TOKEN_DOT_FACTORY_9 - getTokenAddress() - Check curve token address', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   let curveTokenAddr = await factory.getTokenAddress(specifier);
+  //   await expect(curveTokenAddr).to.not.equal(zeroAddress);
+  // });
+  // it('TOKEN_DOT_FACTORY_10 -deploy through dot factory Factory ', async function () {
+  //   let factory = await dotFactoryFactoryInstance.deployFactory(      
+  //     publicKey,
+  //     title
+  //   );
+  //   let factories=await dotFactoryFactoryInstance.getFactories();
+  //  // console.log(factories) 
+  //   let Instantiated=await dotTokenFactory.attach(factories[0])
+  //   await Instantiated.initializeCurve(specifier, title2, piecewiseFunction)
+  //   //await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   let curveTokenAddr = await Instantiated.getTokenAddress(specifier);
+  //   await expect(curveTokenAddr).to.not.equal(zeroAddress);
+  // });
 });
