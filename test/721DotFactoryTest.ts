@@ -20,6 +20,8 @@ const { expect } = chai;
 const publicKey = 77;
 const title ='0x048a2991c2676296b330734992245f5ba6b98174d3f1907d795b7639e92ce532';
 const title2 ='0x077a2991c2676296b330734992245f5ba6b98174d3f1907d795b7639e92ce532';
+const price =1;
+const metadata ="https://gateway.ipfs.io/ipfs/QmaWPP9HFvWZceV8en2kisWdwZtrTo8ZfamEzkTuFg3PFr"
 const routeKeys = [1];
 const params = ['param1', 'param2'];
 
@@ -247,7 +249,7 @@ describe('ZapBondage', () => {
       publicKey,
       title
     );
-    let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
+    let tx = await factory.initializeCurve(specifier, title, piecewiseFunction,price,metadata,false);
     tx = await tx.wait();
     console.log(tx);
 
