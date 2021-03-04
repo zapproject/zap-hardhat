@@ -242,21 +242,21 @@ describe('ZapBondage', () => {
     ).to.equal(factory.address);
   });
 
-  it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
-    let factory = await dotTokenFactory.deploy(
-      coordinator.address,
-      tokenFactory.address,
-      publicKey,
-      title
-    );
-    let tx = await factory.initializeCurve(specifier, title, piecewiseFunction,price,metadata,false);
-    tx = await tx.wait();
-    console.log(tx);
+  // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
+  //   let factory = await dotTokenFactory.deploy(
+  //     coordinator.address,
+  //     tokenFactory.address,
+  //     publicKey,
+  //     title
+  //   );
+  //   let tx = await factory.initializeCurve(specifier, title, piecewiseFunction,price,metadata,false);
+  //   tx = await tx.wait();
+  //   console.log(tx);
 
-    let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
-    console.log(dotTokenCreatedEvent);
-    await expect(dotTokenCreatedEvent).to.be.not.equal(null);
-  });
+  //   let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
+  //   console.log(dotTokenCreatedEvent);
+  //   await expect(dotTokenCreatedEvent).to.be.not.equal(null);
+  // });
 
   // it('TOKEN_DOT_FACTORY_4 - initializeCurve() - Exception thrown if curve specifier already exists', async function () {
   //   let factory = await dotTokenFactory.deploy(
