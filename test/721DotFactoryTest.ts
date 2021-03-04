@@ -10,7 +10,7 @@ import { Registry } from '../typechain/Registry';
 import { Bondage } from '../typechain/Bondage';
 import { ZapToken } from '../typechain/ZapToken';
 import { CurrentCost } from '../typechain/CurrentCost';
-import { Erc721DotFactory } from '../typechain/Erc721DotFactory';
+import { NftDotTokenFactory } from '../typechain/NftDotTokenFactory';
 import { Erc721DotFactoryFactory} from '../typechain/Erc721DotFactoryFactory';
 import { NftTokenFactory } from '../typechain/NftTokenFactory';
 import { Erc721 } from '../typechain/Erc721';
@@ -104,7 +104,7 @@ describe('ZapBondage', () => {
   let dataBase: Database;
   let bondage: Bondage;
   let cost: CurrentCost;
-  let Erc721DotFactory: Erc721DotFactory;
+  let NftDotTokenFactory: NftDotTokenFactory;
   let factoryToken: any;
   let registry: Registry;
   let factoryTokne: any;
@@ -132,7 +132,7 @@ describe('ZapBondage', () => {
     arbiter = signers[6];
 
     dotTokenFactory = await ethers.getContractFactory(
-      'ERC721DotFactory',
+      'NFTDotTokenFactory',
       signers[0]
     );
   
@@ -217,44 +217,44 @@ describe('ZapBondage', () => {
   it('TOKEN_DOT_FACTORY_1 - constructor() - Check token dot factory initialization', async function () {
     console.log(tokenFactory.address);
     await dotTokenFactory.deploy(
-      // coordinator.address,
-      // tokenFactory.address,
-      "publicKey",
-      "title"
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
     );
   });
 
-  // it('TOKEN_DOT_FACTORY_2 - newToken() - Check new token creation', async function () {
-  //   let factory = await dotTokenFactory.deploy(
-  //     coordinator.address,
-  //     tokenFactory.address,
-  //     publicKey,
-  //     title
-  //   );
-  //   await factory.deployed();
-  //   let tx = await factory.newToken('t1', 'tkn');
-  //   tx = await tx.wait();
+  it('TOKEN_DOT_FACTORY_2 - newToken() - Check new token creation', async function () {
+    let factory = await dotTokenFactory.deploy(
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
+    );
+    await factory.deployed();
+    let tx = await factory.newToken('t1', 'tkn');
+    tx = await tx.wait();
 
-  //   await expect(
-  //     ethers.utils.getAddress(ethers.utils.hexStripZeros(tx.logs[0].topics[2]))
-  //   ).to.equal(factory.address);
-  // });
+    await expect(
+      ethers.utils.getAddress(ethers.utils.hexStripZeros(tx.logs[0].topics[2]))
+    ).to.equal(factory.address);
+  });
 
-  // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
-  //   let factory = await dotTokenFactory.deploy(
-  //     coordinator.address,
-  //     tokenFactory.address,
-  //     publicKey,
-  //     title
-  //   );
-  //   let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
-  //   tx = await tx.wait();
-  //   console.log(tx);
+  it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
+    let factory = await dotTokenFactory.deploy(
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
+    );
+    let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
+    tx = await tx.wait();
+    console.log(tx);
 
-  //   let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
-  //   console.log(dotTokenCreatedEvent);
-  //   await expect(dotTokenCreatedEvent).to.be.not.equal(null);
-  // });
+    let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
+    console.log(dotTokenCreatedEvent);
+    await expect(dotTokenCreatedEvent).to.be.not.equal(null);
+  });
 
   // it('TOKEN_DOT_FACTORY_4 - initializeCurve() - Exception thrown if curve specifier already exists', async function () {
   //   let factory = await dotTokenFactory.deploy(
