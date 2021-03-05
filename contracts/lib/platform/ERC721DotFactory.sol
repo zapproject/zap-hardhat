@@ -29,7 +29,7 @@ interface NFTTokenInterface  {
 interface TokenFactoryInterface{
     function create(string calldata _name, string calldata _symbol) external returns (NFTTokenInterface);
 }
-contract ERC721DotFactory {
+contract NftDotFactoryFactory {
     address[] public deployedFactories;
     address public coordinator;
     address public factory;

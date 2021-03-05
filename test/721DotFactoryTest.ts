@@ -11,7 +11,7 @@ import { Bondage } from '../typechain/Bondage';
 import { ZapToken } from '../typechain/ZapToken';
 import { CurrentCost } from '../typechain/CurrentCost';
 import { NftDotTokenFactory } from '../typechain/NftDotTokenFactory';
-import { Erc721DotFactoryFactory} from '../typechain/Erc721DotFactoryFactory';
+import { NftDotFactoryFactory} from '../typechain/NftDotFactoryFactory';
 import { NftTokenFactory } from '../typechain/NftTokenFactory';
 import { Erc721 } from '../typechain/Erc721';
 chai.use(solidity);
@@ -122,7 +122,7 @@ describe('ZapBondage', () => {
   let arbiter: any;
   let dotTokenFactory: any;
   //let dotFactoryFactory:DotFactoryFactory;
-  let Erc721DotFactoryFactoryInstance:any;
+  let nftDotFactoryFactoryInstance:any;
   beforeEach(async () => {
     signers = await ethers.getSigners();
     owner = signers[0];
@@ -163,10 +163,10 @@ describe('ZapBondage', () => {
       'CurrentCost',
       signers[0]
     );
-    // const dotFactoryFactory = await ethers.getContractFactory(
-    //   'Erc721DotFactoryFactory',
-    //   signers[0]
-    // );
+    const dotFactoryFactory = await ethers.getContractFactory(
+       'NftDotFactoryFactory',
+       signers[0]
+     );
     const bondFactory = await ethers.getContractFactory('Bondage', signers[0]);
     tokenFactory = (await genericTokenFactory.deploy()) as NftTokenFactory;
     await tokenFactory.deployed();
@@ -183,8 +183,8 @@ describe('ZapBondage', () => {
 
     registry = (await registryFactory.deploy(coordinator.address)) as Registry;
 
-    // Erc721DotFactoryFactoryInstance=await dotFactoryFactory.deploy(coordinator.address, tokenFactory.address) as Erc721DotFactoryFactory;
-    // await Erc721DotFactoryFactoryInstance.deployed()
+   nftDotFactoryFactoryInstance=await dotFactoryFactory.deploy(coordinator.address, tokenFactory.address) as NftDotFactoryFactory;
+   await nftDotFactoryFactoryInstance.deployed()
     
     await dataBase.transferOwnership(coordinator.address);
     await coordinator.addImmutableContract('DATABASE', dataBase.address);
@@ -240,6 +240,12 @@ describe('ZapBondage', () => {
     await expect(
       ethers.utils.getAddress(ethers.utils.hexStripZeros(tx.logs[0].topics[2]))
     ).to.equal(factory.address);
+  });
+  it('TOKEN_DOT_FACTORY_FACTORY_1 - constructor() - Check new factory creation', async function () {
+    
+    await nftDotFactoryFactoryInstance.deployFactory(publicKey, title) 
+   let r=await nftDotFactoryFactoryInstance.getFactories()
+   console.log(r)
   });
 
   // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
