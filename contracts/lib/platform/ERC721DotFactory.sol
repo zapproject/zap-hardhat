@@ -106,7 +106,8 @@ contract NFTDotTokenFactory is Ownable {
         curves_list.push(specifier);
         curvesTokenPrice[specifier]=price;
         registry.setProviderParameter(specifier, toBytes(curves[specifier]));
-        ERC721.setBaseURI(baseMetadata);
+        NFTTokenInterface token= NFTTokenInterface( curves[specifier]);
+        token.setBaseURI(baseMetadata);
         emit DotTokenCreated(curves[specifier]);
         return curves[specifier];
     }

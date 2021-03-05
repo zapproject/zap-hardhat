@@ -121,6 +121,7 @@ describe('ZapBondage', () => {
   let escrower2: any;
   let arbiter: any;
   let dotTokenFactory: any;
+  let genericTokenFactory:any;
   //let dotFactoryFactory:DotFactoryFactory;
   let nftDotFactoryFactoryInstance:any;
   beforeEach(async () => {
@@ -143,7 +144,7 @@ describe('ZapBondage', () => {
       'ZapToken',
       signers[0]
     );
-    const genericTokenFactory = await ethers.getContractFactory(
+    genericTokenFactory = await ethers.getContractFactory(
       'NFTTokenFactory',
       signers[0]
     );
@@ -245,7 +246,16 @@ describe('ZapBondage', () => {
     
     await nftDotFactoryFactoryInstance.deployFactory(publicKey, title) 
    let r=await nftDotFactoryFactoryInstance.getFactories()
-   console.log(r)
+   let instance=await dotTokenFactory.attach(r[0])
+   await instance.initializeCurve(
+    ethers.utils.formatBytes32String("Test Token"), 
+    ethers.utils.formatBytes32String("Test"),
+    piecewiseFunction,
+    100,
+    "https://test.io",
+    false)
+
+   
   });
 
   // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
