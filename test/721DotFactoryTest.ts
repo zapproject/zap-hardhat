@@ -258,75 +258,99 @@ describe('ZapBondage', () => {
    
   });
 
-  // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
-  //   let factory = await dotTokenFactory.deploy(
-  //     coordinator.address,
-  //     tokenFactory.address,
-  //     publicKey,
-  //     title
-  //   );
-  //   let tx = await factory.initializeCurve(specifier, title, piecewiseFunction,price,metadata,false);
-  //   tx = await tx.wait();
-  //   console.log(tx);
+  it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
+    let factory = await dotTokenFactory.deploy(
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
+    );
+    let tx = await factory.initializeCurve(
+    ethers.utils.formatBytes32String("Test Token"), 
+    ethers.utils.formatBytes32String("Test"),
+    piecewiseFunction,
+    100,
+    "https://test.io",
+    false);
+    tx = await tx.wait();
+    console.log(tx);
 
-  //   let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
-  //   console.log(dotTokenCreatedEvent);
-  //   await expect(dotTokenCreatedEvent).to.be.not.equal(null);
-  // });
+    let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
+    console.log(dotTokenCreatedEvent);
+    await expect(dotTokenCreatedEvent).to.be.not.equal(null);
+  });
 
-  // it('TOKEN_DOT_FACTORY_4 - initializeCurve() - Exception thrown if curve specifier already exists', async function () {
-  //   let factory = await dotTokenFactory.deploy(
-  //     coordinator.address,
-  //     tokenFactory.address,
-  //     publicKey,
-  //     title
-  //   );
-  //   let tx = await factory.initializeCurve(specifier, title, piecewiseFunction);
-  //   tx = await tx.wait();
-  //   console.log(tx);
-  //   let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
-  //   await expect(dotTokenCreatedEvent).to.be.not.equal(null);
+  it('TOKEN_DOT_FACTORY_4 - initializeCurve() - Exception thrown if curve specifier already exists', async function () {
+    let factory = await dotTokenFactory.deploy(
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
+    );
+    let tx = await factory.initializeCurve(
+    ethers.utils.formatBytes32String("Test Token"), 
+    ethers.utils.formatBytes32String("Test"),
+    piecewiseFunction,
+    100,
+    "https://test.io",
+    false);
+    tx = await tx.wait();
+    console.log(tx);
+    let dotTokenCreatedEvent = findEvent(tx.events, 'DotTokenCreated');
+    await expect(dotTokenCreatedEvent).to.be.not.equal(null);
 
-  //   await expect(factory.initializeCurve(specifier, title, piecewiseFunction))
-  //     .to.reverted;
-  // });
+    await expect(factory.initializeCurve(specifier, title, piecewiseFunction))
+      .to.reverted;
+  });
 
-  // it('TOKEN_DOT_FACTORY_5 - bond() - Check bonding', async function () {
-  //   let factory = await dotTokenFactory.deploy(
-  //     coordinator.address,
-  //     tokenFactory.address,
-  //     publicKey,
-  //     title
-  //   );
+  it('TOKEN_DOT_FACTORY_5 - bond() - Check bonding', async function () {
+    let factory = await dotTokenFactory.deploy(
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
+    );
 
-  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
-  //   let reserveTokenAddr = await factory.reserveToken();
-  //   let reserveToken = await zapToken.attach(reserveTokenAddr);
-  //   await reserveToken.allocate(subscriber.address, 10000);
-  //   await reserveToken.connect(subscriber).approve(factory.address, 10000);
-  //   await factory.connect(subscriber).bond(specifier, 1);
+    await factory.initializeCurve(
+    ethers.utils.formatBytes32String("Test Token"), 
+    ethers.utils.formatBytes32String("Test"),
+    piecewiseFunction,
+    100,
+    "https://test.io",
+    false);
+    let reserveTokenAddr = await factory.reserveToken();
+    let reserveToken = await zapToken.attach(reserveTokenAddr);
+    await reserveToken.allocate(subscriber.address, 10000);
+    await reserveToken.connect(subscriber).approve(factory.address, 10000);
+    await factory.connect(subscriber).bond(specifier);
 
-  //   let subBalance = parseInt(
-  //     (await reserveToken.balanceOf(subscriber.address)).toString()
-  //   );
-  //   console.log(subBalance);
-  //   await expect(subBalance).to.be.not.equal(10000);
-  // });
+    let subBalance = parseInt(
+      (await reserveToken.balanceOf(subscriber.address)).toString()
+    );
+    console.log(subBalance);
+    await expect(subBalance).to.be.not.equal(10000);
+  });
 
-  // it('TOKEN_DOT_FACTORY_6 - bond() - Check that user can not bond without tokens', async function () {
-  //   let factory = await dotTokenFactory.deploy(
-  //     coordinator.address,
-  //     tokenFactory.address,
-  //     publicKey,
-  //     title
-  //   );
-  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
-  //   let reserveTokenAddr = await factory.reserveToken();
-  //   let reserveToken = await zapToken.attach(reserveTokenAddr);
-  //   // await reserveToken.allocate(subscriber, 10000);
-  //   await reserveToken.connect(subscriber).approve(factory.address, 10000);
-  //   await expect(factory.connect(subscriber).bond(specifier, 1)).to.reverted;
-  // });
+  it('TOKEN_DOT_FACTORY_6 - bond() - Check that user can not bond without tokens', async function () {
+    let factory = await dotTokenFactory.deploy(
+      coordinator.address,
+      tokenFactory.address,
+      publicKey,
+      title
+    );
+    await factory.initializeCurve(
+    ethers.utils.formatBytes32String("Test Token"), 
+    ethers.utils.formatBytes32String("Test"),
+    piecewiseFunction,
+    100,
+    "https://test.io",
+    false);
+    let reserveTokenAddr = await factory.reserveToken();
+    let reserveToken = await zapToken.attach(reserveTokenAddr);
+    // await reserveToken.allocate(subscriber, 10000);
+    await reserveToken.connect(subscriber).approve(factory.address, 10000);
+    await expect(factory.connect(subscriber).bond(specifier, 1)).to.reverted;
+  });
 
   // it('TOKEN_DOT_FACTORY_7 - unbond() - Check unbonding', async function () {
   //   let factory = await dotTokenFactory.deploy(
@@ -335,7 +359,13 @@ describe('ZapBondage', () => {
   //     publicKey,
   //     title
   //   );
-  //   await factory.initializeCurve(specifier, title2, piecewiseFunction);
+  //   await factory.initializeCurve(
+  //   ethers.utils.formatBytes32String("Test Token"), 
+  //   ethers.utils.formatBytes32String("Test"),
+  //   piecewiseFunction,
+  //   100,
+  //   "https://test.io",
+  //   false);
   //   let reserveTokenAddr = await factory.reserveToken();
   //   let reserveToken = await zapToken.attach(reserveTokenAddr);
   //   await reserveToken.allocate(subscriber.address, 10000);
