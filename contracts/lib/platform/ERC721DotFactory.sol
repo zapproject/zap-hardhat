@@ -115,7 +115,9 @@ contract NFTDotTokenFactory is Ownable {
         require(whitelistedCurve[specifier]==true,"curve must be  whitelisted");
         whitelisting[bonder][specifier]=uri;
     }
-
+    function getTokenID(bytes32 specifier,uint tokenMinted) public view returns(uint){
+        return uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
+    }
     event Bonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender); 
     //function approveForBond(address user, string memory metadata) public onlyOwner;
     //whether this contract holds tokens or coming from msg.sender,etc
@@ -137,7 +139,7 @@ contract NFTDotTokenFactory is Ownable {
         require(bytes(whitelisting[msg.sender][specifier]).length>0,"user must be whitelisted for metadata");
 
         uint id= uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
-
+        tokensMinted[specifier]+=1;
         reserveToken.approve(address(bondage), numReserve);
         bondage.bond(address(this), specifier, numDots);
 
@@ -160,8 +162,8 @@ contract NFTDotTokenFactory is Ownable {
             reserveToken.transferFrom(msg.sender, address(this), numReserve),
             "insufficient accepted token numDots approved for transfer"
         );
-        require(bytes(whitelisting[msg.sender][specifier]).length>0,"user must be whitelisted for metadata");
-
+       
+        tokensMinted[specifier]+=1;
         uint id= uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
 
         reserveToken.approve(address(bondage), numReserve);

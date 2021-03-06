@@ -254,10 +254,35 @@ describe('ZapBondage', () => {
     100,
     "https://test.io",
     false)
+    
 
    
   });
-
+  it('TOKEN_DOT_FACTORY_FACTORY_2 - constructor() - Check bonding to a  factory', async function () {
+    
+    await nftDotFactoryFactoryInstance.deployFactory(publicKey, title) 
+   let r=await nftDotFactoryFactoryInstance.getFactories()
+   let instance=await dotTokenFactory.attach(r[0])
+   await instance.initializeCurve(
+    ethers.utils.formatBytes32String("Test Token"), 
+    ethers.utils.formatBytes32String("Test"),
+    piecewiseFunction,
+    1,
+    "https://test.io",
+    false)
+    
+    await zapToken.allocate(subscriber.address, 10000);
+    await zapToken.connect(subscriber).approve(instance.address, 10000);
+    let tx=await instance.connect(subscriber).bond(ethers.utils.formatBytes32String("Test Token"));
+    tx=await tx.wait()
+    let nftAddress=await instance.curves(ethers.utils.formatBytes32String("Test Token"))
+    //console.log(tx)
+    let NFT=await factoryToken.attach(nftAddress)
+    let balance=await NFT.balanceOf(subscriber.address)
+    await expect(
+      balance
+    ).to.equal(1);
+  });
   // it('TOKEN_DOT_FACTORY_3 - initializeCurve() - Check curve initialization', async function () {
   //   let factory = await dotTokenFactory.deploy(
   //     coordinator.address,
