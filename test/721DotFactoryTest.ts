@@ -322,7 +322,7 @@ describe('ZapBondage', () => {
       .to.reverted;
   });
 
-  it('TOKEN_DOT_FACTORY_5 - bond() - Check bonding', async function () {
+  /**it('TOKEN_DOT_FACTORY_5 - bond() - Check bonding', async function () {
     let factory = await dotTokenFactory.deploy(
       coordinator.address,
       tokenFactory.address,
@@ -349,7 +349,7 @@ describe('ZapBondage', () => {
     console.log(subBalance);
     await expect(subBalance).to.be.not.equal(10000);
   });
-
+ **/
   it('TOKEN_DOT_FACTORY_6 - bond() - Check that user can not bond without tokens', async function () {
     let factory = await dotTokenFactory.deploy(
       coordinator.address,

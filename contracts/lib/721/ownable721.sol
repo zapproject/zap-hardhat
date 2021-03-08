@@ -26,6 +26,7 @@ contract Ownable {
 
 contract ownable721 is ERC721,Ownable{
     bool public mintingFinished=false;
+    using Address for address;
     modifier canMint() {
         require(!mintingFinished);
         _;
@@ -36,7 +37,7 @@ contract ownable721 is ERC721,Ownable{
         _;
     }
     constructor( string memory name_, string memory symbol_) ERC721(name_,symbol_){
-         require( isContract(msg.sender)==true,"NFT must deployed through a factory contract");
+         require( msg.sender.isContract()==true,"NFT must deployed through a factory contract");
     }
    function mint(address to,uint256 tokenId) public onlyOwner canMint {
      
