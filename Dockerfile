@@ -1,5 +1,34 @@
+#                       Dockerfile
+# ------------------------------------------------------
+# image:    ansible-nodejs
+# tag:      latest
+# name:     ansibleshipyard/ansible-nodejs
+# version:  v0.1.5
+# repo:     https://github.com/AnsibleShipyard/ansible-nodejs
+# how-to:   docker build --force-rm -t ansibleshipyard/ansible-nodejs .
+# requires: ansibleshipyard/ansible-base-ubuntu
+# authors:  github:@jasongiedymin,
+#           github:
+# ------------------------------------------------------
+
+FROM ansibleshipyard/ansible-base-ubuntu
+
+# -----> Env
+ENV WORKDIR /tmp/build/roles/ansible-nodejs
+WORKDIR /tmp/build/roles/ansible-nodejs
+
+# -----> Add assets
+ADD ./ci $WORKDIR/ci
+ADD ./meta $WORKDIR/meta
+ADD ./tasks $WORKDIR/tasks
+
+# -----> Install Galaxy Dependencies
+
+# -----> Execute
 FROM node:alpine 
 
+
+WORKDIR /
 
 ARG pm2_public
 ARG pm2_secret
