@@ -19,6 +19,7 @@ import './tasks/dispatch';
 import './tasks/dispatchCoinGecko';
 import './tasks/dispatchBittrex';
 import './tasks/checkClient';
+import './tasks/automateDispatch';
 
 // TODO: reenable solidity-coverage when it works
 // import "solidity-coverage";
