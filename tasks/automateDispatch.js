@@ -1,7 +1,6 @@
 const { task, taskArgs } = require("hardhat/config");
-var shell = require('shelljs');
-var cron = require('node-cron');
 
+const shell = require('shelljs');
 
 require("hardhat-deploy-ethers");
 require("hardhat-deploy");
@@ -21,20 +20,42 @@ task("automateDispatch", "Automates the process of dispatching the CoinGecko Ora
         let endpoint = ethers.utils.formatBytes32String('Zap Price');
 
         // Stores the CoinGecko's initiated status
-        const initProviderStatus = await registry.isProviderInitiated(signers[0].address)
+        const initProviderStatus = await registry.isProviderInitiated(signers[0].address);
 
-        if (initProviderStatus === true) {
+        console.log(initProviderStatus)
 
-            // Initiates the CoinGecko Oracle
-            shell.exec('npx hardhat --network localhost initiateProviderCurve');
+        switch (initProviderStatus) {
 
-            // Dispatches the CoinGecko Oracle
-            shell.exec('npx hardhat --network localhost dispatchCoinGecko ')
+            case true:
 
-        } else {
+                // Initiates the CoinGecko Oracle
+                shell.exec('npx hardhat --network localhost initiateProviderCurve')
 
-            shell.echo('CoinGecko Oracle can not be dispatched')
+                // Dispatches the CoinGecko Oracle
+                shell.exec('npx hardhat --network localhost dispatchCoinGecko ')
+
+                break;
+
+            case false:
+
+                shell.echo('CoinGecko Oracle can not be dispatched')
+
+                break;
+
         }
+
+        // try {
+
+        //     if (initProviderStatus === true) {
+
+        //         // Initiates the CoinGecko Oracle
+        //         shell.exec('npx hardhat --network localhost initiateProviderCurve');
+
+        //         // Dispatches the CoinGecko Oracle
+        //         shell.exec('npx hardhat --network localhost dispatchCoinGecko ');
+        //     }
+
+        //     shell.echo('CoinGecko Oracle can not be dispatched');
 
     })
 
