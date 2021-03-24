@@ -102,51 +102,75 @@ async function main() {
   const tokenFactory = await ethers.getContractFactory('ZapToken', signers[0]);
   const zapToken = await tokenFactory.deploy();
   await zapToken.deployed();
+  console.log(`zapToken address is ${zapToken.address}`)
 
   const coordinator = await ethers.getContractFactory('ZapCoordinator', signers[0]);
   const Coordinator = await coordinator.deploy();
+  console.log(`Coordinator address is ${Coordinator.address}`)
 
   const arbiter = await ethers.getContractFactory('Arbiter', signers[0]);
   const Arbiter = await arbiter.deploy(Coordinator.address);
+  console.log(`Arbiter address is ${Arbiter.address}`)
 
   const currentcost = await ethers.getContractFactory('CurrentCost', signers[0])
   const CurrentCost = await currentcost.deploy(Coordinator.address);
+  console.log(`Current Cost address is ${CurrentCost.address}`)
 
   const database = await ethers.getContractFactory('Database', signers[0])
   const Database = await database.deploy();
+  console.log(`Database address is ${Database.address}`)
 
   const dispatch = await ethers.getContractFactory('Dispatch', signers[0])
   const Dispatch = await dispatch.deploy(Coordinator.address);
   console.log(`Dispatch address is ${Dispatch.address}`)
+
   const faucetContract = await ethers.getContractFactory('Faucet', signers[0]);
   const faucet = await faucetContract.deploy(zapToken.address);
   await faucet.deployed();
+  console.log(`Faucet address is ${faucet.address}`)
 
   const registry = await ethers.getContractFactory('Registry', signers[0])
   const Registry = await registry.deploy(Coordinator.address);
+  console.log(`Registry address is ${Registry.address}`)
+
   // Transfer ownership before creating bondage contract
 
   await Database.transferOwnership(Coordinator.address);
+  console.log(`Database ownnership is transferred to Coordinator`)  
+  
 
   const bondage = await ethers.getContractFactory('Bondage', signers[0]);
   const Bondage = await bondage.deploy(Coordinator.address);
- 
+  console.log(`Bondage address is ${Bondage.address}`)
  
   await Coordinator.addImmutableContract('DATABASE', Database.address);
+  console.log(`Coordinator added Database contract`)
+
   await Coordinator.addImmutableContract('ARBITER', Arbiter.address);
+  console.log(`Coordinator added ARBITER contract`)
+
   await Coordinator.addImmutableContract('FAUCET', faucet.address);
+  console.log(`Coordinator added FAUCET contract`)
+
   await Coordinator.addImmutableContract('ZAP_TOKEN', zapToken.address);
+  console.log(`Coordinator added Zap Token contract`)
+
   //await Coordinator.addImmutableContract('DISPATCH', Dispatch.address)
   //await Coordinator.addImmutableContract('BONDAGE', Bondage.address);
   await Coordinator.updateContract('REGISTRY', Registry.address);
+  console.log(`Coordinator added Registry contract`)
   await Coordinator.updateContract('CURRENT_COST', CurrentCost.address);
+  console.log(`Coordinator added Current Cost contract`)
   await Coordinator.updateContract('DISPATCH', Dispatch.address);
+  console.log(`Coordinator added Dispatch contract`)
 
 
-
+  // Hangs here
   await Coordinator.updateContract('BONDAGE', Bondage.address);
   await Coordinator.updateAllDependencies();
   await hre.run('faucet')
+  console.log(`faucet ran `)
+
   //await hre.run('initiateProvider')
   //await hre.run('initiateProviderCurve')
 
@@ -155,8 +179,11 @@ async function main() {
 
   // Approve the amount of Zap
   await zapToken.allocate(owner.address, tokensForOwner)
+  console.log(`allocated from owner to tokens for owner`)
   await zapToken.allocate(broker.address, tokensForSubscriber)
+  console.log(`zapToken : broker address tokens for subscriber`)
   await zapToken.connect(broker).approve(Bondage.address, approveTokens)
+  console.log(`zapToken broker: bondage and approve`)
   const subscriberFactory = await ethers.getContractFactory(
     'TestClient'
   );
@@ -181,12 +208,15 @@ async function main() {
   ))
 
   await subscriber.deployed();
+
+  console.log(`subscriber deployed`)
   await offchainsubscriber.deployed();
   const oracle = (await oracleFactory.deploy(
     Registry.address,
     false
   ))
   await oracle.deployed()
+  console.log(`oracle deployed`)
 
   const dotFactoryFactory = await ethers.getContractFactory(
     'DotFactoryFactory',
@@ -198,8 +228,10 @@ async function main() {
   );
   let generictoken = (await genericTokenFactory.deploy());
   await generictoken.deployed();
+  console.log(`generic token deployed`)
   await dotFactoryFactory.deploy(Coordinator.address, generictoken.address);
-  
+  console.log(`dotFactoryFactory deployed`)
+
 
 }
 
