@@ -86,77 +86,122 @@ function _calculatePolynomial(terms: any, x: any) {
 
 async function main() {
 
-  let signers = await ethers.getSigners();
+  // let signers = await ethers.getSigners();
 
-  let owner = signers[0]
+   const [deployer] = await ethers.getSigners();
 
-  let subscriberAddress = signers[1];
+  console.log(
+    "Deploying contracts with the account:",
+    deployer.address
+  );
 
-  let OracleSigner = signers[2];
-  let broker = signers[3];
+  // let owner = signers[0]
 
-  let escrower = signers[4];
-  let escrower2 = signers[5];
-  let arbiter_ = signers[6];
+  // let subscriberAddress = signers[1];
 
-  const tokenFactory = await ethers.getContractFactory('ZapToken', signers[0]);
-  const zapToken = await tokenFactory.deploy();
+  // let OracleSigner = signers[2];
+  // let broker = signers[3];
+
+  // let escrower = signers[4];
+  // let escrower2 = signers[5];
+  // let arbiter_ = signers[6];
+
+  let overrides = {
+
+    // The maximum units of gas for the transaction to use
+    // gasLimit: 23000,
+
+    // The price (in wei) per unit of gas
+    gasPrice: ethers.utils.parseUnits('112.0', 'gwei'),
+    
+    // The nonce to use in the transaction
+    // nonce: 123,
+
+    // The amount to send with the transaction (i.e. msg.value)
+    // value: utils.parseEther('1.0'),
+
+    // The chain ID (or network ID) to use
+    // chainId: 1
+
+};
+
+  const coordinator = await ethers.getContractFactory('ZapCoordinator', deployer);
+  const Coordinator = await coordinator.deploy(overrides);
+  console.log("Coordinator: ", Coordinator.address)
+
+
+  const tokenFactory = await ethers.getContractFactory('ZapToken', deployer);
+  const zapToken = await tokenFactory.deploy(overrides);
   await zapToken.deployed();
+  console.log("zapToken: ", zapToken.address)
 
-  const coordinator = await ethers.getContractFactory('ZapCoordinator', signers[0]);
-  const Coordinator = await coordinator.deploy();
+  const arbiter = await ethers.getContractFactory('Arbiter', deployer);
+  const Arbiter = await arbiter.deploy(Coordinator.address, overrides);
+  console.log("Arbiter: ", Arbiter.address)
 
-  const arbiter = await ethers.getContractFactory('Arbiter', signers[0]);
-  const Arbiter = await arbiter.deploy(Coordinator.address);
+  const registry = await ethers.getContractFactory('Registry', deployer)
+  const Registry = await registry.deploy(Coordinator.address, overrides);
+  console.log("Registry: ", Registry.address)
 
-  const currentcost = await ethers.getContractFactory('CurrentCost', signers[0])
-  const CurrentCost = await currentcost.deploy(Coordinator.address);
+  const currentcost = await ethers.getContractFactory('CurrentCost', deployer)
+  const CurrentCost = await currentcost.deploy(Coordinator.address, overrides);
+  console.log("CurrentCost: ", CurrentCost.address)
 
-  const database = await ethers.getContractFactory('Database', signers[0])
-  const Database = await database.deploy();
-
-  const dispatch = await ethers.getContractFactory('Dispatch', signers[0])
-  const Dispatch = await dispatch.deploy(Coordinator.address);
-  console.log(`Dispatch address is ${Dispatch.address}`)
-  const faucetContract = await ethers.getContractFactory('Faucet', signers[0]);
-  const faucet = await faucetContract.deploy(zapToken.address);
+  const database = await ethers.getContractFactory('Database', deployer)
+  const Database = await database.deploy(overrides);
+  console.log("Database: ", Database.address)
+  
+  const dispatch = await ethers.getContractFactory('Dispatch', deployer)
+  const Dispatch = await dispatch.deploy(Coordinator.address, overrides);
+  console.log("Dispatch: ", Dispatch.address)
+  
+  const faucetContract = await ethers.getContractFactory('Faucet', deployer);
+  const faucet = await faucetContract.deploy(zapToken.address, overrides);
   await faucet.deployed();
-
-  const registry = await ethers.getContractFactory('Registry', signers[0])
-  const Registry = await registry.deploy(Coordinator.address);
+  console.log("faucet: ", faucet.address)
+  
+  
   // Transfer ownership before creating bondage contract
+  await Database.transferOwnership(Coordinator.address, overrides);
 
-  await Database.transferOwnership(Coordinator.address);
-
-  const bondage = await ethers.getContractFactory('Bondage', signers[0]);
-  const Bondage = await bondage.deploy(Coordinator.address);
+  const bondage = await ethers.getContractFactory('Bondage', deployer);
+  const Bondage = await bondage.deploy(Coordinator.address, overrides);
+  console.log("Bondage: ", Bondage.address)
  
+  
+  console.log("#####################")
+  console.log("#####################")
+  console.log("ALL CONTRACT DEPLOYED")
+  console.log("#####################")
+  console.log("#####################")
+
+
+
  
   await Coordinator.addImmutableContract('DATABASE', Database.address);
   await Coordinator.addImmutableContract('ARBITER', Arbiter.address);
   await Coordinator.addImmutableContract('FAUCET', faucet.address);
   await Coordinator.addImmutableContract('ZAP_TOKEN', zapToken.address);
-  //await Coordinator.addImmutableContract('DISPATCH', Dispatch.address)
+  //await Coordinator.addImmutableContract('DISPATCH', Dispatch.address);
   //await Coordinator.addImmutableContract('BONDAGE', Bondage.address);
   await Coordinator.updateContract('REGISTRY', Registry.address);
   await Coordinator.updateContract('CURRENT_COST', CurrentCost.address);
   await Coordinator.updateContract('DISPATCH', Dispatch.address);
 
-
-
   await Coordinator.updateContract('BONDAGE', Bondage.address);
   await Coordinator.updateAllDependencies();
-  await hre.run('faucet')
-  //await hre.run('initiateProvider')
-  //await hre.run('initiateProviderCurve')
+  // await hre.run('faucet')
+  // //await hre.run('initiateProvider')
+  // //await hre.run('initiateProviderCurve')
 
-  // await Registry.connect(OracleSigner).initiateProvider(publicKey, title);
-  // await Registry.connect(OracleSigner).initiateProviderCurve(specifier, piecewiseFunction, zeroAddress);
+  await Registry.connect(deployer).initiateProvider(publicKey, title);
+  await Registry.connect(deployer).initiateProviderCurve(specifier, piecewiseFunction, zeroAddress);
 
   // Approve the amount of Zap
-  await zapToken.allocate(owner.address, tokensForOwner)
-  await zapToken.allocate(broker.address, tokensForSubscriber)
-  await zapToken.connect(broker).approve(Bondage.address, approveTokens)
+  await zapToken.allocate(deployer, tokensForOwner)
+  await zapToken.allocate(deployer, tokensForSubscriber)
+  await zapToken.approve(Bondage.address, approveTokens)
+  // await zapToken.connect(broker).approve(Bondage.address, approveTokens)
   const subscriberFactory = await ethers.getContractFactory(
     'TestClient'
   );
@@ -170,35 +215,38 @@ async function main() {
     zapToken.address,
     Dispatch.address,
     Bondage.address,
-    Registry.address
+    Registry.address,
+    overrides
   ))
 
   const offchainsubscriber = (await offchainSubscriberFactory.deploy(
     zapToken.address,
     Dispatch.address,
     Bondage.address,
-    Registry.address,  
+    Registry.address,
+    overrides  
   ))
 
   await subscriber.deployed();
   await offchainsubscriber.deployed();
   const oracle = (await oracleFactory.deploy(
     Registry.address,
-    false
+    false,
+    overrides
   ))
   await oracle.deployed()
 
   const dotFactoryFactory = await ethers.getContractFactory(
     'DotFactoryFactory',
-    signers[0]
+    deployer
   );
   const genericTokenFactory = await ethers.getContractFactory(
     'TokenFactory',
-    signers[0]
+    deployer
   );
-  let generictoken = (await genericTokenFactory.deploy());
+  let generictoken = (await genericTokenFactory.deploy(overrides));
   await generictoken.deployed();
-  await dotFactoryFactory.deploy(Coordinator.address, generictoken.address);
+  await dotFactoryFactory.deploy(Coordinator.address, generictoken.address, overrides);
   
 
 }
