@@ -34,7 +34,7 @@ const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY ||
 const config: HardhatUserConfig = {
 
   solidity: {
-    compilers: [{ version: "0.4.24", settings: {} }, { version: "0.5.1", settings: {} }],
+    compilers: [{ version: "0.4.24", settings: {} }, { version: "0.5.1", settings: {} },{ version: "0.7.3", settings: {} }],
   },
   networks: {
     localhost: {

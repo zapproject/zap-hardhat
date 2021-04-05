@@ -13,7 +13,9 @@ import { Dispatch } from '../typechain/Dispatch';
 import { TestProvider } from '../typechain/TestProvider';
 import { TestClient } from '../typechain/TestClient';
 import { OffChainClient } from '../typechain/OffChainClient';
+import { Example } from '../typechain/Example';
 import OffChainClientAbi from '../artifacts/contracts/lib/platform/OffChainClient.sol/OffChainClient.json'
+
 chai.use(solidity);
 const { expect } = chai;
 
@@ -98,7 +100,7 @@ describe('ZapBondage', () => {
   let signers: any;
   let subscriberAccount: any;
   let owner: any;
-
+  let exampleInst:any;
   let OracleSigner: any;
   let broker: any;
   let escrower: any;
@@ -150,6 +152,10 @@ describe('ZapBondage', () => {
     const oracleFactory = await ethers.getContractFactory(
       'TestProvider',
       OracleSigner
+    );
+    const example = await ethers.getContractFactory(
+      'Example',
+      signers[0]
     );
     const bondFactory = await ethers.getContractFactory('Bondage', signers[0]);
 
@@ -214,6 +220,7 @@ describe('ZapBondage', () => {
     )) as TestProvider;
 
     oracle = await oracle.deployed();
+    exampleInst=await example.deploy(coordinator.address,owner.address,spec1)
    /**  const PriceClient = await ethers.getContractFactory(
       'priceClient',
       signers[0]
@@ -416,7 +423,7 @@ describe('ZapBondage', () => {
     expect(Result1.args["response1"]).to.equal("A TEST RESPONSE");
    
   });
-  it('DISPATCH_5-2 - query() - tests query via pricenClient', async function () {
+  it('DISPATCH_5-2 - query() - tests query via priceClient', async function () {
     await prepareProvider();
     await prepareTokens();
     const PriceClient = await ethers.getContractFactory(
@@ -467,5 +474,31 @@ describe('ZapBondage', () => {
     await expect(
       dispatch.connect(subscriberAccount).respond1(2,"A TEST RESPONSE")
     ).to.reverted;
+  });
+  it('DISPATCH_7 - query() - test a query with the example subscriber ', async function () {
+    await prepareProvider();
+    await prepareTokens();
+
+    await zapToken
+      .connect(subscriberAccount)
+      .approve(bondage.address, approveTokens);
+   
+    await bondage
+      .connect(subscriberAccount)
+      .delegateBond(exampleInst.address, owner.address, spec1, 100);
+
+    let result = await exampleInst
+      .connect(subscriberAccount)
+      .queryProvider(query,  params);
+      
+    let r = await result.wait();
+    let incoming: any = r.events ?? ([] as Event[]);
+    //console.log(incoming)
+    let decoded = IncomingInterface.parseLog(incoming[1]);
+    console.log(decoded)
+    
+    let id:any=decoded.args[0]
+  
+   
   });
 });
