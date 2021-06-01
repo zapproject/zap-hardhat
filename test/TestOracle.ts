@@ -168,19 +168,9 @@ describe("Main Miner Functions", () => {
             await zap.requestData(apix, x, 1000, 52 - i);
         }
 
-        for (var i = 1; i <= 5; i++) {
-
-            // Connects address 1 as the signer
-            zap = zap.connect(signers[i]);
-
-            // Each Miner will submit a mining solution
-            await zap.submitMiningSolution("nonce", 1, 1200);
-
-        }
-
     })
 
-    it("Test didMine", async () => {
+    it("Should get the new current variables", async () => {
 
         /*
            Gets the data properties for the current request
@@ -208,9 +198,29 @@ describe("Main Miner Functions", () => {
 
     })
 
+    it("Should submit mining solution", async () => {
 
-    it("Should get the top request IDs", async () => {
+        for (var i = 1; i <= 5; i++) {
 
-        await zapMaster.get
+            // Connects address 1 as the signer
+            zap = zap.connect(signers[i]);
+
+            // Each Miner will submit a mining solution
+            await zap.submitMiningSolution("nonce", 1, 1200);
+
+        }
+
+        const lastNewVals = await zapMaster.getLastNewValue();
+
+        const requestVal = parseInt(lastNewVals[0]._hex);
+
+        const requestStatus = lastNewVals[1];
+
+        expect(requestVal).to.equal(1200);
+
+        expect(requestStatus).to.equal(true);
+
     })
+
+
 })
