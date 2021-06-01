@@ -21,6 +21,8 @@ import { ZapMaster } from "../typechain/ZapMaster";
 import { Zap } from "../typechain/Zap";
 
 import { BigNumber, ContractFactory } from "ethers";
+import { time } from "console";
+import { connect } from "http2";
 
 const { expect } = chai;
 
@@ -222,5 +224,72 @@ describe("Main Miner Functions", () => {
 
     })
 
+    it("Should test dispute", async () => {
+
+        for (var i = 1; i <= 5; i++) {
+
+            // Connects address 1 as the signer
+            zap = zap.connect(signers[i]);
+
+            // Each Miner will submit a mining solution
+            await zap.submitMiningSolution("nonce", 1, 1200);
+
+        }
+
+        zap = zap.connect(signers[0]);
+
+        const getTimestamp: BigNumber = await zapMaster.getTimestampbyRequestIDandIndex(
+            1,
+            0
+        );
+
+        const timestamp: number = parseInt(getTimestamp._hex);
+
+        // Starts the dispute process on miner 4 (signer 18)
+        await zap.beginDispute(1, timestamp, 4)
+
+        // Converts the uintVar "disputeCount" to a bytes array
+        const disputeCountBytes: Uint8Array = ethers.utils.toUtf8Bytes("disputeCount");
+
+        // Converts the uintVar "disputeCount" from a bytes array to a keccak256 hash
+        const disputeCountHash: string = ethers.utils.keccak256(disputeCountBytes);
+
+        // Gets the the current dispute count
+        const getDisputeCount: BigNumber = await zapMaster.getUintVar(disputeCountHash);
+
+        // Dispute count
+        const disputeCount = parseInt(getDisputeCount._hex);
+
+        // Signers 0, 15, 16, 17, 18, 19, are already miners
+
+        const miners = [
+            signers[0],
+            signers[15],
+            signers[16],
+            signers[17],
+            signers[18],
+            signers[19]
+        ]
+
+        for (var i = 0; i < miners.length; i++) {
+
+            zap = zap.connect(miners[i]);
+
+            if (i === signers[18]) {
+                await zap.vote(1, false)
+            }
+
+            await zap.vote(1, true)
+
+        }
+
+        // console.log(await zap.tallyVotes(1))
+
+        expect(disputeCount).to.equal(1)
+
+    })
+
+
 
 })
+
