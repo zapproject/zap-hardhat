@@ -260,30 +260,23 @@ describe("Main Miner Functions", () => {
         // Dispute count
         const disputeCount = parseInt(getDisputeCount._hex);
 
-        // Signers 0, 15, 16, 17, 18, 19, are already miners
-
         const miners = [
             signers[0],
             signers[15],
             signers[16],
             signers[17],
-            signers[18],
-            signers[19]
         ]
+
+        const disputeVars = await zapMaster.getAllDisputeVars(1);
 
         for (var i = 0; i < miners.length; i++) {
 
             zap = zap.connect(miners[i]);
 
-            if (i === signers[18]) {
-                await zap.vote(1, false)
-            }
-
             await zap.vote(1, true)
 
         }
 
-        // console.log(await zap.tallyVotes(1))
 
         expect(disputeCount).to.equal(1)
 
