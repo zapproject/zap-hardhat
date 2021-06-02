@@ -123,55 +123,110 @@ describe("Did Mine Test", () => {
         zapMaster = (await zapMasterFactory.deploy(zap.address, zapToken.address)) as ZapMaster
         await zapMaster.deployed()
 
-        /**
-         * oracle = await Berry.new();
-         * oracleRef = await RefBerry.new();
-         * await oracle.theLazyMethod(accounts[0], web3.utils.toWei("7000", "ether"));
-         * await oracleRef.theLazyMethod(accounts[0], web3.utils.toWei("7000", "ether"));
-         */
+        // Allocates 5000 ZAP to signer 0 
+        await zapToken.allocate(signers[0].address, 5000);
 
-        // // Allocates ZAP to signers 1 - 5
-        // for (var i = 1; i <= 5; i++) {            
-        //     await zapToken.allocate(signers[i].address, 2000);            
-        // }
-        console.log("started: ");
-        for (var i = 0; i < signers.length; i++) {
-            await zapToken.allocate(signers[i].address, 2000)
+        for (var i = 1; i <= 10; i++) {
+
+            await zapToken.allocate(signers[i].address, 5000)
         }
+
+        // Iterates through signers 1 through 10
+        for (var i = 1; i <= 10; i++) {
+
+            // Attach the ZapMaster instance to Zap
+            zap = zap.attach(zapMaster.address);
+
+            // Connects addresses 1-5 as the signer
+            zap = zap.connect(signers[i]);
+
+            // Stakes 1000 Zap to initiate a miner
+            await zap.depositStake();
+        }
+
     });
 
-    it("SubmitMinningSolution", async () => {
-        console.log("SubmitMinningSolution: ");
+    it("SubmitMiningSolution", async () => {
+
+        zap = zap.connect(signers[0]);
+
+        // Approves Zap.sol the amount to tip for requestData
+        await zapToken.approve(zap.address, 5000)
+
+        // Request string
+        const api: string = "json(https://api.pro.coinbase.com/products/ETH-USD/ticker).price";
+        let x: string;
+        let apix: string;
+
+        // Request string
+        const api2: string = "json(https://api.pro.coinbase.com/products/BTC-USD/ticker).price";
+        let x2: string;
+        let apix2: string;
+
+
+
+        for (var i = 0; i < 52; i++) {
+
+            x = "USD" + i
+            apix = api + i;
+
+            await zap.requestData(apix, x, 1000, 52 - i);
+
+        }
+
+        let receipt;
+        let gases = []
+        let benches = []
+
         for (var i = 1; i <= 5; i++) {
 
             // Connects address 1 as the signer
             zap = zap.connect(signers[i]);
 
             // Each Miner will submit a mining solution
-            const submit = await zap.submitMiningSolution("nonce", 1, 1200);
-            console.log("submit: ", submit);
-            const receipt = await submit.wait()
-            console.log("receipt: ", receipt);
+            const submit = await zap.submitMiningSolution(
+                "nonce",
+                1,
+                1200
+            )
+
+            receipt = await submit.wait();
+
+            gases.push(parseInt(receipt.gasUsed._hex))
+
         }
+
+        // zap = zap.connect(signers[0]);
+
+        // // Approves Zap.sol the amount to tip for requestData
+        // await zapToken.approve(zap.address, 5000)
+
+        // for (var i = 0; i < 52; i++) {
+
+        //     x2 = "USD" + i
+        //     apix2 = api2 + i;
+
+        //     await zap.requestData(apix2, x2, 1000, 52 - i);
+
+        // }
+
+        // for (var i = 6; i <= 10; i++) {
+
+        //     // Connects address 1 as the signer
+        //     zap = zap.connect(signers[i]);
+
+        //     // Each Miner will submit a mining solution
+        //     await zap.submitMiningSolution(
+        //         "nonce",
+        //         1,
+        //         1300
+        //     )
+
+        // }
+
     })
+
     it("Transfers", async () => {
-        /**
-         * let gas = await oracle.transfer(
-            accounts[2],
-            web3.utils.toWei("1", "ether")
-            );
 
-            let ref = await oracleRef.transfer(
-            accounts[2],
-            web3.utils.toWei("1", "ether")
-            );
-
-            console.log(
-               "Gas used: ", gas.receipt.gasUsed,
-               "Gas Reference: ", ref.receipt.gasUsed
-            );
-            assert.isTrue(gas.receipt.gasUsed < ref.receipt.gasUsed);
-         */
-        console.log("SubmitMinningSolution ========================================");
     })
 });

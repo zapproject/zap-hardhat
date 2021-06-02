@@ -8,6 +8,8 @@ import './ZapDispute.sol';
 import './ZapStake.sol';
 import './ZapGettersLibrary.sol';
 
+import 'hardhat/console.sol';
+
 /**
  * @title Zap Oracle System Library
  * @dev Contains the functions' logic for the Zap contract where miners can submit the proof of work
@@ -300,6 +302,7 @@ library ZapLibrary {
         //requre miner is staked
         require(self.stakerDetails[msg.sender].currentStatus == 1);
 
+        console.log(_requestId == self.uintVars[keccak256('currentRequestId')]);
         //Check the miner is submitting the pow for the current request Id
         require(_requestId == self.uintVars[keccak256('currentRequestId')]);
 
