@@ -53,7 +53,7 @@ library ZapStake {
         // }
 
         //update the total suppply
-        self.uintVars[keccak256('total_supply')] += 6000; //6th miner to allow for dispute
+        
         //set Constants
         self.uintVars[keccak256('decimals')] = 18;
         self.uintVars[keccak256('targetMiners')] = 200;
@@ -136,6 +136,8 @@ library ZapStake {
             startDate: //this resets their stake start date to today
             now - (now % 86400)
         });
+
+        self.uintVars[keccak256('total_supply')] += self.uintVars[keccak256('stakeAmount')]; //6th miner to allow for dispute
         emit NewStake(staker);
     }
 
