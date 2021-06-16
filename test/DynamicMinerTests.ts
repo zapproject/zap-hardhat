@@ -134,6 +134,43 @@ describe("Dynamic Miner Tests", () => {
 
     })
 
+    it("Should have an initial totalSupply of 0", async () => {
+
+        // Gets the total oracle tokens as a hexString
+        const getSupply: BigNumber = await zapMaster.totalTokenSupply();
+
+        // Convert the hexString to a number
+        const supply: number = parseInt(getSupply._hex);
+
+        // Expect total supply to be 0
+        expect(supply).to.equal(0);
+    })
+    
+    it("Should increase with staked miners", async () => {
+
+        // Iterates through the length of signers
+        for (var i = 0; i < signers.length; i++) {
+
+            // Attach the ZapMaster instance to Zap
+            zap = zap.attach(zapMaster.address);
+
+            // Connects the 20 signers to the Zap.sol contract
+            zap = zap.connect(signers[i]);
+
+            // Stakes 1000 Zap to initiate a miner
+            await zap.depositStake();
+        }
+
+        // Gets the total oracle tokens as a hexString
+        const getSupply: BigNumber = await zapMaster.totalTokenSupply();
+
+        // Convert the hexString to a number
+        const supply: number = parseInt(getSupply._hex);
+
+        // Expect total supply to be length of signers * 1000
+        expect(supply).to.equal(signers.length * 1000);
+    })
+
     it("Should submit multiple mining solutions", async () => {
 
         let x: string;
@@ -215,5 +252,7 @@ describe("Dynamic Miner Tests", () => {
         expect(miners).to.have.lengthOf(signers.length);
 
     })
+
+    
 
 })
