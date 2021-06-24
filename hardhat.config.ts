@@ -27,6 +27,7 @@ import './tasks/checkClient';
 
 import {getBSCGasPrice} from './scripts/getGasPrice'
 const fs = require('fs');  // required for reading BSC gas price
+getBSCGasPrice()
 
 // TODO: reenable solidity-coverage when it works
 // import "solidity-coverage";
@@ -39,7 +40,6 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY ||
   "0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3";
 
-getBSCGasPrice()
 
 const config = {
 
