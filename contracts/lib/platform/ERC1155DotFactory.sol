@@ -8,16 +8,20 @@ import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
 import "../../platform/registry/RegistryInterface.sol";
 import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
 import "../token/FactoryTokenInterface.sol";
-interface NFTTokenInterface  {
+interface RFTTokenInterface  {
 
            event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
            event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
            event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
-           function mint(address to,uint256 tokenId) external;
+           function mint(address to,uint256 tokenId, uint256 amount, bytes memory data) external;
+           function mintBatch(address to,uint256[] tokenId, uint256[] amounts, bytes memory data) external;
            function burnFrom(uint256 tokenId) external;
+           function burnBatch(address account, uint256[] tokenIds, uint256[] amounts) external;
            function balanceOf(address _owner) external view returns (uint256);
+           function balanceOfBatch(address _owner) external view returns (uint256);
            function ownerOf(uint256 _tokenId) external view returns (address);
            function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata data) external;
+           function safeBatchTransferFrom(address from,address to,uint256[] memory ids,uint256[] memory amounts,bytes memory data);
            function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
            function transferFrom(address _from, address _to, uint256 _tokenId) external;
            function setApprovalForAll(address _operator, bool _approved) external;
@@ -27,9 +31,9 @@ interface NFTTokenInterface  {
            function setURI(uint256 tokenId,string calldata uri) external;
 }
 interface TokenFactoryInterface{
-    function create(string calldata _name, string calldata _symbol) external returns (NFTTokenInterface);
+    function create(string calldata _name, string calldata _symbol) external returns (RFTTokenInterface);
 }
-contract NftDotFactoryFactory {
+contract RFTDotFactoryFactory {
     address[] public deployedFactories;
     address public coordinator;
     address public factory;
@@ -40,7 +44,7 @@ contract NftDotFactoryFactory {
         factory=_factory;
     }
     function deployFactory(uint256 providerPubKey,bytes32 providerTitle ) public returns(address){
-        NFTDotTokenFactory TDF=  new NFTDotTokenFactory(coordinator,factory,providerPubKey,providerTitle);
+        RFTDotTokenFactory TDF=  new RFTDotTokenFactory(coordinator,factory,providerPubKey,providerTitle);
         TDF.transferOwnership(msg.sender);
         deployedFactories.push(address(TDF));
         emit newDotFactory(address(TDF),providerPubKey,providerTitle);
@@ -51,14 +55,14 @@ contract NftDotFactoryFactory {
     }
 }
 
-contract NFTDotTokenFactory is Ownable {
+contract RFTDotTokenFactory is Ownable {
 
     CurrentCostInterface currentCost;
     FactoryTokenInterface public reserveToken;
     ZapCoordinatorInterface public coord;
     TokenFactoryInterface public tokenFactory;
     BondageInterface bondage;
-    NFTTokenInterface public ERC1155;
+    RFTTokenInterface public ERC1155;
     mapping(bytes32 => address) public curves;
     mapping(bytes32=>uint256) public tokensMinted;
     mapping(bytes32=>bool) public whitelistedCurve; 
@@ -85,7 +89,7 @@ contract NFTDotTokenFactory is Ownable {
         RegistryInterface registry = RegistryInterface(coord.getContract("REGISTRY")); 
         registry.initiateProvider(providerPubKey, providerTitle);
     }
-    //set nft price add price unit specifier
+    //set RFT price add price unit specifier
     // tokenuri string
     function initializeCurve(
         bytes32 specifier, 
@@ -106,7 +110,7 @@ contract NFTDotTokenFactory is Ownable {
         curves_list.push(specifier);
         curvesTokenPrice[specifier]=price;
         registry.setProviderParameter(specifier, toBytes(curves[specifier]));
-        NFTTokenInterface token= NFTTokenInterface( curves[specifier]);
+        RFTDotTokenFactoryInterface token= RFTTokenInterface( curves[specifier]);
         token.setBaseURI(baseMetadata);
         emit DotTokenCreated(curves[specifier]);
         return curves[specifier];
@@ -122,7 +126,7 @@ contract NFTDotTokenFactory is Ownable {
     //function approveForBond(address user, string memory metadata) public onlyOwner;
     //whether this contract holds tokens or coming from msg.sender,etc
    
-    // needs nft price 
+    // needs RFT price 
     function bondWhiteListed(bytes32 specifier) public  {
         require(whitelistedCurve[specifier]==true,"curve must be  whitelisted");
         uint numDots=curvesTokenPrice[specifier];
@@ -143,8 +147,8 @@ contract NFTDotTokenFactory is Ownable {
         reserveToken.approve(address(bondage), numReserve);
         bondage.bond(address(this), specifier, numDots);
 
-        NFTTokenInterface(curves[specifier]).mint(msg.sender, id);
-        NFTTokenInterface(curves[specifier]).setURI(id,whitelisting[msg.sender][specifier]);
+        RFTTokenInterface(curves[specifier]).mint(msg.sender, id);
+        RFTTokenInterface(curves[specifier]).setURI(id,whitelisting[msg.sender][specifier]);
         whitelisting[msg.sender][specifier]="";
 
         emit Bonded(specifier, numDots, msg.sender);
@@ -169,8 +173,8 @@ contract NFTDotTokenFactory is Ownable {
         reserveToken.approve(address(bondage), numReserve);
         bondage.bond(address(this), specifier, numDots);
 
-        NFTTokenInterface(curves[specifier]).mint(msg.sender, id);
-       // NFTTokenInterface(curves[specifier]).setURI(id,whitelisting[msg.sender][specifier]);
+        RFTTokenInterface(curves[specifier]).mint(msg.sender, id);
+       // RFTTokenInterface(curves[specifier]).setURI(id,whitelisting[msg.sender][specifier]);
         //whitelisting[msg.sender][specifier]="";
 
         emit Bonded(specifier, numDots, msg.sender);
@@ -190,7 +194,7 @@ contract NFTDotTokenFactory is Ownable {
         //unbond dots
         bondage.unbond(address(this), specifier, numDots);
         //burn dot backed token
-        NFTTokenInterface  curveToken = NFTTokenInterface(curves[specifier]);
+        RFTTokenInterface  curveToken = RFTTokenInterface(curves[specifier]);
         require(curveToken.ownerOf(tokenID) == msg.sender,"token must be owned by sender");
         curveToken.burnFrom( tokenID);
 
@@ -207,7 +211,7 @@ contract NFTDotTokenFactory is Ownable {
         onlyOwner
         returns (address tokenAddress) 
     {
-        NFTTokenInterface token = tokenFactory.create(name, symbol);
+        RFTTokenInterface token = tokenFactory.create(name, symbol);
         tokenAddress = address(token);
         return tokenAddress;
     }
