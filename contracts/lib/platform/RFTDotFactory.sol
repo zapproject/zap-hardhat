@@ -6,7 +6,7 @@ import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
 import "../../platform/registry/RegistryInterface.sol";
 import "../../platform/bondage/currentCost/CurrentCostInterface.sol";
 import "contract/lib/1155/ownable1155.sol";
-import "contract/lib/1155/ownable1155.sol";
+// import "contract/lib/1155/ownable1155.sol";
 contract DotFactoryFactory{
     address[] public deployedFactories;
     address public coordinator;
@@ -34,9 +34,9 @@ contract RFTDotFactory is ownable1155 {
     CurrentCostInterface currentCost;
     FactoryTokenInterface public reserveToken;
     ZapCoordinatorInterface public coord;
-    TokenFactoryInterface public tokenFactory;
+    NFTFactoryInterface public tokenFactory;
     BondageInterface bondage;
-
+    uint256 ownerfee;
     mapping(bytes32 => address) public curves; // map of endpoint specifier to token-backed dotaddress
     bytes32[] public curves_list; // array of endpoint specifiers
     event DotTokenCreated(address tokenAddress);
@@ -45,14 +45,15 @@ contract RFTDotFactory is ownable1155 {
         address coordinator, 
         address factory,
         uint256 providerPubKey,
-        bytes32 providerTitle 
+        bytes32 providerTitle,
+        uint256 fee 
     ) public {
         coord = ZapCoordinatorInterface(coordinator); 
         reserveToken = FactoryTokenInterface(coord.getContract("ZAP_TOKEN"));
         //always allow bondage to transfer from wallet
         reserveToken.approve(coord.getContract("BONDAGE"), ~uint256(0));
         tokenFactory = TokenFactoryInterface(factory);
-
+        ownerfee=fee;
         RegistryInterface registry = RegistryInterface(coord.getContract("REGISTRY")); 
         registry.initiateProvider(providerPubKey, providerTitle);
     }
@@ -60,7 +61,10 @@ contract RFTDotFactory is ownable1155 {
     function initializeCurve(
         bytes32 specifier, 
         bytes32 symbol, 
-        int256[] memory curve
+        int256[] memory curve,
+        uint256 mintprice,
+        uint256 burnprice,
+        string memory baseMetadata
     ) public  onlyOwner returns(address) {
         
         require(curves[specifier] == address(0), "Curve specifier already exists");
@@ -73,17 +77,20 @@ contract RFTDotFactory is ownable1155 {
         curves_list.push(specifier);
         // int256 supply = curve[curve.length-1];
         registry.setProviderParameter(specifier, toBytes(curves[specifier]));
+        NFTTokenInterface token= NFTTokenInterface( curves[specifier]);
+        token.setBaseURI(baseMetadata);
         
         emit DotTokenCreated(curves[specifier]);
         return curves[specifier];
     }
 
-
-    event Bonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender); 
+    function getTokenID(bytes32 specifier,uint tokenMinted) public view returns(uint){
+        return uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
+    }
+    event Bonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender, bytes memory data); 
 
     //whether this contract holds tokens or coming from msg.sender,etc
-    function bond(bytes32 specifier, uint numDots) public  {
-
+    function bond(bytes32 specifier, uint numDots, uint256 amount) public {
         bondage = BondageInterface(coord.getContract("BONDAGE"));
         uint256 issued = bondage.getDotsIssued(address(this), specifier);
 
@@ -91,13 +98,15 @@ contract RFTDotFactory is ownable1155 {
         uint256 numReserve = cost._costOfNDots(address(this), specifier, issued + 1, numDots - 1);
 
         require(
-            reserveToken.transferFrom(msg.sender, address(this), numReserve),
+            reserveToken.transferFrom(msg.sender, address(this), numReserve+ownerfee),
             "insufficient accepted token numDots approved for transfer"
         );
+        tokensMinted[specifier]+=1;
+        uint id= uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
 
-        reserveToken.approve(address(bondage), numReserve);
+        reserveToken.approve(address(bondburnage), numReserve);
         bondage.bond(address(this), specifier, numDots);
-        FactoryTokenInterface(curves[specifier]).mint(msg.sender, numDots);
+        FactoryTokenInterface(curves[specifier]).mint(msg.sender, id, numDots,data);
         emit Bonded(specifier, numDots, msg.sender);
 
     }
@@ -116,25 +125,15 @@ contract RFTDotFactory is ownable1155 {
         bondage.unbond(address(this), specifier, numDots);
         //burn dot backed token
         FactoryTokenInterface curveToken = FactoryTokenInterface(curves[specifier]);
-        curveToken.burnFrom(msg.sender, numDots);
+            uint id= uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
+        curveToken.burnFrom(msg.sender,id, numDots);
 
         require(reserveToken.transfer(msg.sender, reserveCost), "Error: Transfer failed");
         emit Unbonded(specifier, numDots, msg.sender);
 
     }
 
-    function newToken(
-        string  memory name,
-        string memory symbol
-    ) 
-        public
-        onlyOwner
-        returns (address tokenAddress) 
-    {
-        FactoryTokenInterface token = tokenFactory.create(name, symbol);
-        tokenAddress = address(token);
-        return tokenAddress;
-    }
+    
     function newToken(
         string  memory uri
     ) 
@@ -142,7 +141,7 @@ contract RFTDotFactory is ownable1155 {
         onlyOwner
         returns (address tokenAddress) 
     {
-        RFTTokenInterface token = tokenFactory.create(uri);
+        FactoryTokenInterface token = tokenFactory.create(uri);
         tokenAddress = address(token);
         return tokenAddress;
     }
