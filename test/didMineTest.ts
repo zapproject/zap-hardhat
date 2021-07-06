@@ -139,7 +139,7 @@ describe('Did Mine Test', () => {
 
         await vault.deployed();
 
-        await zapMaster.functions.changeVaultContract(vault.address);
+        await zapMaster.changeVaultContract(vault.address);
 
 
         for (var i = 1; i <= 5; i++) {
@@ -190,7 +190,7 @@ describe('Did Mine Test', () => {
             // Submits the query string as the request
             // Each request will add a tip starting at 51 and count down until 0
             // Each tip will be stored inside the requestQ array
-            await zap.requestData(apix, x, 1000, 52 - i);
+            await expect(zap.requestData(apix, x, 1000, 52 - i)).to.emit(zap, 'DataRequested');
         }
 
         // Gets the tip amounts stored in the requestQ array
@@ -213,8 +213,13 @@ describe('Did Mine Test', () => {
                   */
             const newCurrentVars: any = await zap.getNewCurrentVariables();
 
+            const solSubResult: Promise<any> = zap.submitMiningSolution('nonce', 1, 1200);
             // Each Miner will submit a mining solution
-            await zap.submitMiningSolution('nonce', 1, 1200);
+            if (i == 5){
+                await expect(solSubResult).to.emit(zap, "NewValue");
+            } else {
+                await solSubResult;
+            }
 
             // ensures that miners are not being rewarded before a new block is called
             if (i == 3){
