@@ -67,7 +67,13 @@ contract Zap {
         address indexed previousOwner,
         address indexed newOwner
     );
-
+    event NewValue(
+        uint256 indexed _requestId,
+        uint256 _time,
+        uint256 _value,
+        uint256 _totalTips,
+        bytes32 _currentChallenge
+    ); //Emits upon a successful Mine, indicates the blocktime at point of the mine and the value mined
     using SafeMathM for uint256;
 
     using ZapDispute for ZapStorage.ZapStorageStruct;
@@ -314,6 +320,14 @@ contract Zap {
                     vault.deposit(a[i].miner, minerReward);
                 }
             }
+            emit NewValue(
+                _requestId,
+                zap.uintVars[keccak256('timeOfLastNewValue')],
+                a[2].value,
+                zap.uintVars[keccak256('currentTotalTips')] -
+                    (zap.uintVars[keccak256('currentTotalTips')] % 5),
+                zap.currentChallenge
+            );
         }
 
         zap.uintVars[keccak256('currentMinerReward')] = 0;
