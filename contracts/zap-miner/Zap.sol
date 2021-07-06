@@ -74,6 +74,11 @@ contract Zap {
         uint256 _totalTips,
         bytes32 _currentChallenge
     ); //Emits upon a successful Mine, indicates the blocktime at point of the mine and the value mined
+    event Voted(
+        uint256 indexed _disputeID,
+        bool _position,
+        address indexed _voter
+    ); //emitted when a new vote happens
     using SafeMathM for uint256;
 
     using ZapDispute for ZapStorage.ZapStorageStruct;
@@ -200,6 +205,8 @@ contract Zap {
      */
     function vote(uint256 _disputeId, bool _supportsDispute) external {
         zap.vote(_disputeId, _supportsDispute);
+        //Let the network know the user has voted on the dispute and their casted vote
+        emit Voted(_disputeId, _supportsDispute, msg.sender);
     }
 
     /**
