@@ -20,8 +20,9 @@ import { Zap } from '../typechain/Zap';
 
 import { Vault } from "../typechain/Vault";
 
-import { BigNumber, ContractFactory } from 'ethers';
-import { collect } from 'underscore';
+import { BigNumber, ContractFactory, ContractReceipt } from 'ethers';
+import { hexZeroPad } from 'ethers/lib/utils';
+import { request } from 'http';
 
 const { expect } = chai;
 
@@ -44,6 +45,8 @@ let zap: Zap;
 let vault: Vault;
 
 let signers: any;
+
+let owner: any;
 
 describe('Did Mine Test', () => {
     beforeEach(async () => {
@@ -141,14 +144,23 @@ describe('Did Mine Test', () => {
 
         await zapMaster.functions.changeVaultContract(vault.address);
 
-
         for (var i = 1; i <= 5; i++) {
+
             // Allocates ZAP to signers 1 - 5
             await zapTokenBsc.allocate(signers[i].address, 600000);
+
         }
+
+        owner = signers[0].address
+
+        await zapTokenBsc.allocate(zapMaster.address, 500000);
+
+
+
     });
 
     it('Test didMine', async () => {
+
         let x: string;
 
         let apix: string;
@@ -165,6 +177,7 @@ describe('Did Mine Test', () => {
 
         // Iterates through signers 1 through 5
         for (var i = 1; i <= 5; i++) {
+
             // Connects addresses 1-5 as the signer
             zap = zap.connect(signers[i]);
 
@@ -182,66 +195,158 @@ describe('Did Mine Test', () => {
         await zapTokenBsc.approve(zap.address, 5000);
 
         // Iterates the length of the requestQ array
-        for (var i = 0; i < 52; i++) {
-            x = 'USD' + i;
-            apix = api + i;
+        // for (var i = 0; i < 52; i++) {
+        x = 'USD' + i;
+        apix = api + i;
 
-            // Submits the query string as the request
-            // Each request will add a tip starting at 51 and count down until 0
-            // Each tip will be stored inside the requestQ array
-            await zap.requestData(apix, x, 1000, 52 - i);
+        // Submits the query string as the request
+        // Each request will add a tip starting at 51 and count down until 0
+        // Each tip will be stored inside the requestQ array
+        const request_1 = await zap.requestData(api, "USD", 1000, 52)
 
-        }
+        /*
+          Gets the data properties for the current request
+          bytes32 _challenge,
+          int256[5] memory _requestIds,
+          uint256 _difficutly,
+          uint256 _tip
+      */
+        const newCurrentVars: any = await zap.getNewCurrentVariables();
 
-        // Gets the tip amounts stored in the requestQ array
-        // Values are returned as hexStrings
+        // Resolves the transaction receipt
+        const request_1_Receipt: any = await request_1.wait();
+
+        expect(request_1_Receipt.events[3].event).to.equal('DataRequested');
+
+        expect(request_1_Receipt.events[3].args[0]).to.equal(owner);
+
+        expect(request_1_Receipt.events[3].args[1]).to.equal(api);
+
+        expect(request_1_Receipt.events[3].args[2]).to.equal("USD");
+
+        expect(request_1_Receipt.events[3].args[3]).to.equal(ethers.utils.hexlify(1000));
+
+        expect(request_1_Receipt.events[3].args[4]).to.equal(ethers.utils.hexlify(1));
+
+        expect(request_1_Receipt.events[3].args[5]).to.equal(ethers.utils.hexlify(52));
+
+        // Expect the event name to equal NewChallenge
+        expect(request_1_Receipt.events[2].event).to.equal('NewChallenge');
+
+        // Expect NewChallenge _currentChallenge property to equal the returned challenge
+        expect(request_1_Receipt.events[2].args[0]).to.equal(newCurrentVars[0])
+
+        // Expect the NewChallenge _currentRequestId property to equal 1
+        expect(request_1_Receipt.events[2].args[1]).to.equal(ethers.utils.hexlify(1))
+
+        /// Expect the NewChallenge _difficulty property to equal 1
+        expect(request_1_Receipt.events[2].args[2]).to.equal(ethers.utils.hexlify(1))
+
+        // Expect the NewChallenge _multiplier property to equal 1
+        expect(request_1_Receipt.events[2].args[3]).to.equal(ethers.utils.hexlify(1000))
+
+        // Expect the NewChallenge _query property to equal the api variable
+        expect(request_1_Receipt.events[2].args[4]).to.equal(api)
+
+        // Expect the new NewChallenge _totalTips property to equal 52
+        expect(request_1_Receipt.events[2].args[5]).to.equal(52)
+
+        const request_2 = await zap.requestData(api, "USD", 1000, 52);
+
+        // Resolves the transaction receipt
+        const request_2_Receipt: any = await request_2.wait();
+
+        expect(request_2_Receipt.events[2].event).to.equal('NewRequestOnDeck');
+
+        expect(request_2_Receipt.events[2].args[0]).to.equal(ethers.utils.hexlify(1));
+
+        expect(request_2_Receipt.events[2].args[1]).to.equal(api);
+
+        expect(request_2_Receipt.events[2].args[3]).to.equal(ethers.utils.hexlify(52));
+
+
+        // Expect the event name to equal TipAdded
+        expect(request_2_Receipt.events[3].event).to.equal('TipAdded')
+
+        // Expect the TipAdded _sender property to equal signers[0] address
+        expect(request_2_Receipt.events[3].args[0]).to.equal(owner)
+
+        // Expect the TipAdded _requestId property to equal 1
+        expect(request_2_Receipt.events[3].args[1]).to.equal(
+            ethers.utils.hexlify(1)
+        )
+
+        // Expect the TipAdded _tip property to equal 52
+        expect(request_2_Receipt.events[3].args[2]).to.equal(
+            ethers.utils.hexlify(52)
+        )
+
+        // Expect the TipAdded _totalTips property to equal 52
+        expect(request_2_Receipt.events[3].args[3]).to.equal(
+            ethers.utils.hexlify(52)
+        )
+
         const getReqQ: BigNumber[] = await zapMaster.getRequestQ();
 
         // Parses the getReqQ array from hexStrings to numbers
         const reqQ: number[] = getReqQ.map((item) => parseInt(item._hex));
 
         for (var i = 1; i <= 5; i++) {
+
             // Connects address 1 as the signer
             zap = zap.connect(signers[i]);
 
-            /*
-                  Gets the data properties for the current request
-                  bytes32 _challenge,
-                  uint256[5] memory _requestIds,
-                  uint256 _difficutly,
-                  uint256 _tip
-                  */
-            const newCurrentVars: any = await zap.getNewCurrentVariables();
-
-            const solSubResult: Promise<any> = zap.submitMiningSolution('nonce', 1, 1200);
             // Each Miner will submit a mining solution
-            if (i == 5){
-                await expect(solSubResult).to.emit(zap, "NewValue");
-            } else {
-                await solSubResult;
-            }
+            // Expects the "NonceSubmitted" event to emit
+            const solution = await zap.submitMiningSolution('nonce', 1, 1200);
 
-            // interface for events
-            const iface = new ethers.utils.Interface([
-                zap.interface.events['NonceSubmitted(address,string,uint256,uint256,bytes32)']
-            ]);
+            const solutionReceipt: any = await solution.wait()
 
-            // event filter
-            let filter = zap.filters.NonceSubmitted(null, null, null, null, null)
+            console.log(signers[i].address)
 
-            // event listener
-            ethers.provider.on(filter, (log, events) => {
-                console.log('Log: ', log);
-                console.log('Events: ', events);
-                const event = iface.parseLog(log);
-                // const event = iface.decodeEventLog("NewDispute", log.data, log.topics)
-                console.log('PARSED EVENT: ', event);
-            });
+            console.log(solutionReceipt.events[0])
 
+            // zap
+
+
+
+            // // interface for events
+            // const nonceSubmittedIface = new ethers.utils.Interface([
+            //     zap.interface.events['NonceSubmitted(address,string,uint256,uint256,bytes32)']
+            // ]);
+
+            // // nonceSubmitted event filter
+            // let nonceSubmittedFilter = zap.filters.NonceSubmitted(null, null, null, null, null);
+
+            // // event listener for the NonceSubmitted
+            // ethers.provider.on(nonceSubmittedFilter, (log) => {
+
+            //     const event = nonceSubmittedIface.parseLog(log);
+
+            //     // Expects the event name to equal NonceSubmitted
+            //     expect(event.name).to.equal('NonceSubmitted');
+
+            //     // Expects the nonce arg returned from the event to equal the nonce submitted
+            //     expect(event.args[1]).to.equal('nonce');
+
+            //     // Expects the requestId arg returned from the event to equal the requestId mined
+            //     // ethers.utils.hexlify(1) = 0x01
+            //     // 0x01 is the requestId value returned from the event
+            //     expect(event.args[2]).to.equal(ethers.utils.hexlify(1));
+
+            //     // Expects the value arg returned from the event to equal the value submitted
+            //     // ethers.utils.hexlify(1200) = 0x04b0
+            //     // 0x04b0 is the value returned from the event
+            //     expect(event.args[3]).to.equal(ethers.utils.hexlify(1200));
+
+            //     // Expects the currentChallenge arg returned from the event to equal the challenge mined
+            //     expect(event.args[4]).to.equal(newCurrentVars[0])
+
+            // });
 
             // ensures that miners are not being rewarded before a new block is called
             if (i == 3) {
-                expect(await vault.connect(signers[i]).userBalance(signers[i].address)).to.equal(0);
+                expect(await vault.connect(signers[i]).userBalance(signers[i].address)).to.equal(500000);
             }
 
             // Checks if the miners mined the challenge
@@ -259,7 +364,6 @@ describe('Did Mine Test', () => {
             expect(didMineStatus).to.be.true;
 
         }
-
 
         expect(reqQ).to.have.length(51);
 
@@ -287,7 +391,7 @@ describe('Did Mine Test', () => {
 
         let signerFourVaultBalance = await vault.userBalance(signers[4].address);
         expect(signerFourVaultBalance).to.equal(
-            15,
+            500015,
             "Miner's personal vault should have a balance of 25 tokens."
         );
 
