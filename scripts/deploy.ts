@@ -242,11 +242,17 @@ console.log("deployed ZapGettersLibrary")
   console.log("ZapMaster Address: " + ZapMaster.address)
   console.log("Deployed ZapMaster")
 
-const vault = await ethers.getContractFactory("Vault", signers[0]);
-const Vault = await vault.deploy(zapToken.address, ZapMaster.address);
-await Vault.deployed();
-console.log("Vault Address:", Vault.address)
-console.log("deployed Vault")
+  const vault = await ethers.getContractFactory("Vault", signers[0]);
+  const Vault = await vault.deploy(zapToken.address, ZapMaster.address);
+  await Vault.deployed();
+  console.log("Vault Address:", Vault.address)
+  console.log("deployed Vault")
+
+  const aggregator = await ethers.getContractFactory("Aggregator", signers[0]);
+  const Aggregator = await aggregator.deploy(ZapMaster.address);
+  await Aggregator.deployed();
+  console.log("Aggregator Address: ", Aggregator.address);
+  console.log("deployed Aggregator");
 }
 
 main()
