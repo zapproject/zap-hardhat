@@ -213,8 +213,13 @@ describe('Did Mine Test', () => {
                   */
             const newCurrentVars: any = await zap.getNewCurrentVariables();
 
+            const solSubResult: Promise<any> = zap.submitMiningSolution('nonce', 1, 1200);
             // Each Miner will submit a mining solution
-            await zap.submitMiningSolution('nonce', 1, 1200)
+            if (i == 5){
+                await expect(solSubResult).to.emit(zap, "NewValue");
+            } else {
+                await solSubResult;
+            }
 
             // interface for events
             const iface = new ethers.utils.Interface([
