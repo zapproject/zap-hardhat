@@ -1,3 +1,5 @@
+
+
 import "contracts/lib/token/TokenFactoryInterface.sol";
 import "contracts/lib/token/FactoryTokenInterface.sol";
 import "contracts/lib/ownership/ZapCoordinatorInterface.sol";
@@ -13,10 +15,10 @@ interface RFTTokenInterface  {
      event ApprovalForAll(address indexed account, address indexed operator, bool approved);
     event URI(string value, uint256 indexed id);
 
-            function _mint(address account,uint256 id,uint256 amount,bytes memory data) internal virtual;
-            function _mintBatch(address to,uint256[] memory ids,uint256[] memory amounts,bytes memory data) internal virtual;
-            function _burn(address account,uint256 id,uint256 amount) internal virtual;
-            function _burnBatch(address account,uint256[] memory ids,uint256[] memory amounts) internal virtual; 
+            function _mint(address account,uint256 id,uint256 amount,bytes calldata data) external;
+            function _mintBatch(address to,uint256[] calldata ids,uint256[] calldata amounts,bytes calldata data) external;
+            function _burn(address account,uint256 id, uint256 amount) external;
+            function _burnBatch(address account,uint256[] calldata ids,uint256[] calldata amounts) external; 
             function balanceOf(address _owner) external view returns (uint256);
             function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids)external view returns (uint256[] memory);
             function ownerOf(uint256 _tokenId) external view returns (address);
@@ -25,10 +27,10 @@ interface RFTTokenInterface  {
             function setApprovalForAll(address operator, bool approved) external;
             function getApproved(uint256 _tokenId) external view returns (address);
             function isApprovedForAll(address account, address operator) external view returns (bool);
-            function _setURI(string memory newuri) internal virtual
+            function _setURI(string calldata newuri) external;
 }
 interface RFTFactoryInterface {
-    function create(string memory _uri) external returns (RFTTokenInterface);
+    function create(string calldata _uri) external returns (RFTTokenInterface);
 }
 
 contract DotFactoryFactory{
@@ -54,11 +56,12 @@ contract DotFactoryFactory{
 }
 
 contract TokenDotFactory is Ownable {
+    mapping(bytes32=>uint256) public tokensMinted;
 
     CurrentCostInterface currentCost;
     FactoryTokenInterface public reserveToken;
     ZapCoordinatorInterface public coord;
-    TokenFactoryInterface public tokenFactory;
+    RFTFactoryInterface public tokenFactory;
     BondageInterface bondage;
 
     mapping(bytes32 => address) public curves; // map of endpoint specifier to token-backed dotaddress
@@ -75,7 +78,7 @@ contract TokenDotFactory is Ownable {
         reserveToken = FactoryTokenInterface(coord.getContract("ZAP_TOKEN"));
         //always allow bondage to transfer from wallet
         reserveToken.approve(coord.getContract("BONDAGE"), ~uint256(0));
-        tokenFactory = TokenFactoryInterface(factory);
+        tokenFactory = RFTFactoryInterface(factory);
 
         RegistryInterface registry = RegistryInterface(coord.getContract("REGISTRY")); 
         registry.initiateProvider(providerPubKey, providerTitle);
@@ -93,7 +96,7 @@ contract TokenDotFactory is Ownable {
         require(registry.isProviderInitiated(address(this)), "Provider not intiialized");
 
         registry.initiateProviderCurve(specifier, curve, address(this));
-        curves[specifier] = newToken(bytes32ToString(specifier), bytes32ToString(symbol));
+        curves[specifier] = newToken(bytes32ToString(specifier));
         curves_list.push(specifier);
         
         registry.setProviderParameter(specifier, toBytes(curves[specifier]));
@@ -106,7 +109,7 @@ contract TokenDotFactory is Ownable {
     event Bonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender); 
 
     //whether this contract holds tokens or coming from msg.sender,etc
-    function bond(bytes32 specifier, uint numDots) public  {
+    function bond(bytes32 specifier, uint numDots, bytes memory data) public  {
 
         bondage = BondageInterface(coord.getContract("BONDAGE"));
         uint256 issued = bondage.getDotsIssued(address(this), specifier);
@@ -118,14 +121,17 @@ contract TokenDotFactory is Ownable {
             reserveToken.transferFrom(msg.sender, address(this), numReserve),
             "insufficient accepted token numDots approved for transfer"
         );
-
+        // tokensMinted[specifier]+=1;
+        uint id= uint(keccak256(abi.encodePacked(specifier)));//+tokensMinted[specifier];
         reserveToken.approve(address(bondage), numReserve);
         bondage.bond(address(this), specifier, numDots);
-        FactoryTokenInterface(curves[specifier]).mint(msg.sender, numDots);
+        RFTTokenInterface(curves[specifier])._mint(msg.sender, id, numDots,data);
         emit Bonded(specifier, numDots, msg.sender);
 
     }
-
+   function getTokenID(bytes32 specifier,uint tokenMinted) public view returns(uint){
+        return uint(keccak256(abi.encodePacked(specifier)))+tokensMinted[specifier];
+    }
     event Unbonded(bytes32 indexed specifier, uint256 indexed numDots, address indexed sender); 
 
     //whether this contract holds tokens or coming from msg.sender,etc
@@ -139,8 +145,9 @@ contract TokenDotFactory is Ownable {
         //unbond dots
         bondage.unbond(address(this), specifier, numDots);
         //burn dot backed token
-        FactoryTokenInterface curveToken = FactoryTokenInterface(curves[specifier]);
-        curveToken.burnFrom(msg.sender, numDots);
+        uint id= uint(keccak256(abi.encodePacked(specifier)));
+        RFTTokenInterface curveToken = RFTTokenInterface(curves[specifier]);
+        curveToken._burn(msg.sender, id, numDots);
 
         require(reserveToken.transfer(msg.sender, reserveCost), "Error: Transfer failed");
         emit Unbonded(specifier, numDots, msg.sender);
@@ -148,14 +155,13 @@ contract TokenDotFactory is Ownable {
     }
 
     function newToken(
-        string  memory name,
-        string memory symbol
+        string  memory uri
     ) 
         public
         onlyOwner
         returns (address tokenAddress) 
     {
-        FactoryTokenInterface token = tokenFactory.create(name, symbol);
+        RFTTokenInterface token = tokenFactory.create(uri);
         tokenAddress = address(token);
         return tokenAddress;
     }
