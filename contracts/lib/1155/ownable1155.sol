@@ -47,7 +47,7 @@ contract ownable1155 is ERC1155,Ownable{
         _setURI(uri);
    }
    function mintBatch(address to,uint256[] memory ids,uint256[] memory amounts,bytes memory data) public onlyOwner canMint{
-    _mintBatch(to,ids,amounts,data)
+    _mintBatch(to,ids,amounts,data);
    }
 
    // function setBaseURI(string memory base) public onlyOwner canMint{
@@ -59,7 +59,7 @@ contract ownable1155 is ERC1155,Ownable{
       _burn(account, id,amount);
     }
     function burnBatch(address account,uint256[] memory ids,uint256[] memory amounts) public onlyOwner{
-      _burnbatch(account,ids,amounts);
+      _burnBatch(account,ids,amounts);
     }
    function toggleMinting() public  onlyOwner{
        mintingFinished=!mintingFinished;
