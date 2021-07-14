@@ -33,7 +33,7 @@ interface RFTFactoryInterface {
     function create(string calldata _uri) external returns (RFTTokenInterface);
 }
 
-contract DotFactoryFactory{
+contract RFTDotFactoryFactory{
     address[] public deployedFactories;
     address public coordinator;
     address public factory;

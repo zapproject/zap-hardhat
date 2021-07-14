@@ -3,8 +3,10 @@
     import chai from 'chai';
     const { expect } = require('chai');
     import mocha from 'mocha';
-    import { RftDotFactory } from '../typechain/RFTDotFactory';
+    import { RftDotFactory } from '../typechain/RftDotFactory';
     import { ZapCoordinator } from '../typechain/ZapCoordinator';
+    import {RftDotFactoryFactory} from '../typechain/RftDotFactoryFactory';
+
     //import { TokenFactory } from '../typechain/TokenFactory';
     import { Erc1155Factory } from '../typechain/Erc1155Factory';
     import { RftTokenFactory } from '../typechain/RftTokenFactory';
@@ -14,9 +16,12 @@
     let RFTDotFactory: RftDotFactory;
     let signers : any;
     let coordinator: ZapCoordinator;
+    let coordinatorFactory: any;
     //let factory : TokenFactory;
     let RFTTokenFactory : RftTokenFactory;
-
+    let RFTDotFactoryFactory:RftDotFactoryFactory;
+    let RFTDotFactoryInstance:any;
+    let RFTDotFactoryFactoryInstance:any;
 describe('Testing', () => {
     
     beforeEach(async () => {
@@ -26,23 +31,22 @@ describe('Testing', () => {
         const coordinatorFactory = await ethers.getContractFactory('ZapCoordinator', signers[0]);
       
         // deploys coordinator contract
-        coordinator = (await coordinator.deploy()) as ZapCoordinator;
+        coordinator = (await coordinatorFactory.deploy()) as ZapCoordinator;
         await coordinator.deployed();
     
-        // Instantiate factory contract
-        RFTTokenFactory = (await ethers.getContractFactory('RFTTokenFactory', signers[0])) as unknown as RftTokenFactory;
-
-        // deploys factory contract 
-        RFTTokenFactory = (await RFTTokenFactory.deploy()) as RftTokenFactory;
+        // Instantiate token factory contract
+        const RFTFactory = await ethers.getContractFactory('RFTTokenFactory',signers[0]);
+        RFTTokenFactory = (await RFTFactory.deploy()) as RftTokenFactory;
        
 
         //instantiate dotfactoryfactory
-       // const rftDotFactoryFactory = (await ethers.getContractFactory('RftDotFactoryFactory', signers[0])) as RftDotFactoryFactory;
+       const rftDotFactoryFactory = (await ethers.getContractFactory('RFTDotFactoryFactory', signers[0]));// as RftDotFactoryFactory;
        
         // deploys dotfactoryfactory
-         //RFTDotFactory = (await RFTDotFactory.deploy(coordinator.address, )) as RftDotFactory;
-        //await RFTDotFactory.deployed();
-    
+        RFTDotFactoryFactoryInstance=await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address) as RftDotFactory;
+         // RFTDotFactoryFactoryInstance = (await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address)) as RftDotFactoryFactory;
+        // await RFTDotFactory.deployed();
+        
 
  
    
