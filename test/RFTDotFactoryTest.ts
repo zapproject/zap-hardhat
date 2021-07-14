@@ -22,6 +22,8 @@
     let RFTDotFactoryFactory:RftDotFactoryFactory;
     let RFTDotFactoryInstance:any;
     let RFTDotFactoryFactoryInstance:any;
+    const title =
+  '0x048a2991c2676296b330734992245f5ba6b98174d3f1907d795b7639e92ce532';
 describe('Testing', () => {
     
     beforeEach(async () => {
@@ -46,7 +48,8 @@ describe('Testing', () => {
         RFTDotFactoryFactoryInstance=await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address) as RftDotFactory;
          // RFTDotFactoryFactoryInstance = (await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address)) as RftDotFactoryFactory;
         // await RFTDotFactory.deployed();
-        
+        const rftDotFactory = await ethers.getContractFactory('RFTDotFactory',signers[0]);
+        // RFTDotFactoryInstance = await rftDotFactory.deploy(coordinator.address, RFTTokenFactory.address,77,signers[1],2)
 
  
    
