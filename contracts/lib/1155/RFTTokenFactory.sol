@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "./ownable1155.sol";
 import "./IERC1155.sol";
 
-contract NFTTokenFactory  {
+contract RFTTokenFactory  {
     constructor() public{
 
     }

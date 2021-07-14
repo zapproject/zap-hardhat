@@ -37,17 +37,17 @@ contract DotFactoryFactory{
     address[] public deployedFactories;
     address public coordinator;
     address public factory;
-    event newDotFactory(address dotfactory,uint PubKey,bytes32 Title );
+    event newDotFactory(address dotfactory,uint PubKey,bytes32 Title, uint256 fee);
 
     constructor(address _coordinator,address _factory) public {
         coordinator=_coordinator;
         factory=_factory;
     }
-    function deployFactory(uint256 providerPubKey,bytes32 providerTitle ) public returns(address){
-        TokenDotFactory TDF=  new TokenDotFactory(coordinator,factory,providerPubKey,providerTitle);
+    function deployFactory(uint256 providerPubKey,bytes32 providerTitle, uint256 providerfee ) public returns(address){
+        RFTDotFactory TDF=  new RFTDotFactory(coordinator, factory, providerPubKey, providerTitle, providerfee);
         TDF.transferOwnership(msg.sender);
         deployedFactories.push(address(TDF));
-        emit newDotFactory(address(TDF),providerPubKey,providerTitle);
+        emit newDotFactory(address(TDF),providerPubKey, providerTitle, providerfee);
         return address(TDF);
     }
     function getFactories() public view returns(address[] memory){
@@ -55,7 +55,7 @@ contract DotFactoryFactory{
     }
 }
 
-contract TokenDotFactory is Ownable {
+contract RFTDotFactory is Ownable {
     mapping(bytes32=>uint256) public tokensMinted;
 
     CurrentCostInterface currentCost;
@@ -68,18 +68,21 @@ contract TokenDotFactory is Ownable {
     bytes32[] public curves_list; // array of endpoint specifiers
     event DotTokenCreated(address tokenAddress);
 
+    uint256 fee;
+
     constructor(
         address coordinator, 
         address factory,
         uint256 providerPubKey,
-        bytes32 providerTitle 
+        bytes32 providerTitle,
+        uint256 ownerfee 
     ) public {
         coord = ZapCoordinatorInterface(coordinator); 
         reserveToken = FactoryTokenInterface(coord.getContract("ZAP_TOKEN"));
         //always allow bondage to transfer from wallet
         reserveToken.approve(coord.getContract("BONDAGE"), ~uint256(0));
         tokenFactory = RFTFactoryInterface(factory);
-
+        fee = ownerfee;
         RegistryInterface registry = RegistryInterface(coord.getContract("REGISTRY")); 
         registry.initiateProvider(providerPubKey, providerTitle);
     }
@@ -118,7 +121,7 @@ contract TokenDotFactory is Ownable {
         uint256 numReserve = cost._costOfNDots(address(this), specifier, issued + 1, numDots - 1);
 
         require(
-            reserveToken.transferFrom(msg.sender, address(this), numReserve),
+            reserveToken.transferFrom(msg.sender, address(this), numReserve + fee),
             "insufficient accepted token numDots approved for transfer"
         );
         // tokensMinted[specifier]+=1;
