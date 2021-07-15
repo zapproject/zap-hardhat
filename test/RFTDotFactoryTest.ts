@@ -45,11 +45,11 @@ describe('Testing', () => {
        const rftDotFactoryFactory = (await ethers.getContractFactory('RFTDotFactoryFactory', signers[0]));// as RftDotFactoryFactory;
        
         // deploys dotfactoryfactory
-        RFTDotFactoryFactoryInstance=await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address) as RftDotFactory;
+        RFTDotFactoryFactoryInstance=await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address) as unknown as RftDotFactoryFactory;
          // RFTDotFactoryFactoryInstance = (await rftDotFactoryFactory.deploy(coordinator.address, RFTTokenFactory.address)) as RftDotFactoryFactory;
         // await RFTDotFactory.deployed();
         const rftDotFactory = await ethers.getContractFactory('RFTDotFactory',signers[0]);
-        // RFTDotFactoryInstance = await rftDotFactory.deploy(coordinator.address, RFTTokenFactory.address,77,signers[1],2)
+        // RFTDotFactoryInstance = await rftDotFactory.deploy(coordinator.address, RFTTokenFactory.address,77,title,2)
 
  
    
